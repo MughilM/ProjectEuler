@@ -3,6 +3,7 @@ layout: post
 title: "Problem 3 - Largest prime factor"
 date: 2015-07-23 11:50
 mathjax: true
+number: 3
 ---
 
 ## Question

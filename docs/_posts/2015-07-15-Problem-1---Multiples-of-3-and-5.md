@@ -3,6 +3,7 @@ layout: post
 title: "Problem 1 - Multiples of 3 and 5"
 date: 2015-07-15 17:41:00
 mathjax: true
+number: 1
 ---
 
 ## Question

@@ -12,7 +12,7 @@ Project Euler is a vast collection of problems ranging in all areas of mathemati
 
 ### Format
 
-So, each problem is a blog post, with the date being the date that I solved it. Generally, I try to solve the problems in numerical order, but due to difficulty of some problems, I may jump back and forth. Links to all problems in order are listed here (link TBD).
+So, each problem is a blog post, with the date being the date that I solved it. Generally, I try to solve the problems in numerical order, but due to difficulty of some problems, I may jump back and forth. Links to all problems in order are listed [here](/All-Problems.md).
 
 Additionally, each program has been written in this format:
 
