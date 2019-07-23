@@ -40,7 +40,7 @@ Note that the diagonal heading northeast has $$1,9,25,49,\dots$$. These are the 
 
 So our method is loop through each odd number until 1001, and add that number squared, as well as the other 3 numbers described in the preceding paragraph. We will start from 3, as to not triple count the 1 in the center.
 
-```
+```python
 spiralLim = 1001
 s = 0
 for n in range(3, spiralLim + 1, 2):
@@ -58,7 +58,7 @@ print(s)
 
  Running the above results in,
 
-```python
+```
 669171001
 0.0023656268259237617 seconds.
 ```
