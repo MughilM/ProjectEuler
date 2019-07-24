@@ -45,9 +45,11 @@ Now, there is a recurring constant "1" which we add at the end. I will subtract 
 From our problem example, the fractional-only expansion of the 2nd and 3rd step is $$\displaystyle\frac{2}{5}$$ and $$\displaystyle\frac{5}{12}$$ respectively (remember I am subtracting 1). However, with the 3rd expansion, notice the expression in red:
 
 
+
 $$
-\frac{1}{2 + \color{red}\frac{1}{2 + \frac{1}{2}}}
+\frac{1}{2 + \color{red}{\frac{1}{2 + \frac{1}{2}}}}
 $$
+
 
 
 That is exactly the expression used for the 2nd expansion of $$\displaystyle\frac{2}{5}$$! In that case, we can plug this in directly, and end up computing $$\displaystyle\frac{1}{2+\frac{2}{5}} = \frac{1}{\frac{12}{5}} = \frac{5}{12}$$. In general, this pattern will follow each pair of expansion. As an extra example, the 3rd expansion can be plugged into the 4th in the same way: $$\displaystyle \frac{1}{2 + \frac{5}{12}} = \frac{1}{\frac{29}{12}} = \frac{12}{29}$$.

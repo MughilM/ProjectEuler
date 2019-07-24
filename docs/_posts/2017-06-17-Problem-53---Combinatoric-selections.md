@@ -10,7 +10,7 @@ number: 53
 
 There are exactly ten ways of selecting three from five, 12345:
 
-<p align="center">
+<p style="text-align:center">
 123, 124, 125, 134, 135, 145, 234, 235, 245, and 345
 </p>
 
@@ -53,7 +53,7 @@ We can actually solve this problem without computing a single factorial! We can 
 2. The second row is $$1\quad 1$$.
 3. Each row after the second is formed by placing two ones at the ends, while the middle values are calculated by adding the two numbers above. For example, the first 5 rows are shown below.
 
-<pre align="center">
+<pre style="text-align:center">
 1
 1 1
 1 2 1

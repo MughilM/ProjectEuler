@@ -33,7 +33,7 @@ Consider the following 5 hands dealt to two players:
 | **2** |           5D 8C 9S JS AC<br />Highest card Ace            |           2C 5C 7D 8S QH<br />Highest card Queen           | Player 1 |
 | **3** |              2D 9C AS AH AC<br />Three Aces               |          3D 6D 7D TD QD<br />Flush with Diamonds           | Player 2 |
 | **4** | 4D 6S 9H QH QC<br />Pair of Queens<br />Highest card Nine | 3D 6D 7H QD QS<br />Pair of Queens<br />Highest card Seven | Player 1 |
-| **5** |      2H 2D 4C 4D 4S<br />Full House with Three Fours      |      3C 3D 3S 9S 9D<br />Full House with Three Threes      | Player 1 |
+| **5** |   2H 2D 4C 4D 4S<br />Full House <br />with Three Fours   |   3C 3D 3S 9S 9D<br />Full House <br />with Three Threes   | Player 1 |
 
 The file, [poker.txt](https://projecteuler.net/project/resources/p054_poker.txt), contains one-thousand random hands dealt to two players. Each line of the file contains ten cards (separated by a single space): the first five are Player 1's cards and the last five are Player 2's cards, You can assume that all hands are valid (no invalid characters or repeated cards), each player's hands are in no specific order, and in each hand there is a clear winner.
 
