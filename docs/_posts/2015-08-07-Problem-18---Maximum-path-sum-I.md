@@ -39,7 +39,7 @@ Find the maximum total from top to bottom of the triangle below:
 04 62 98 27 23 09 70 98 73 93 38 53 60 04 23
 </pre>
 
-**NOTE**: As there are only 16384 routes, it is possible to solve this problem by trying every route. However, Problem 67, is the same challenge with a triangle containing one-hundred rows; it cannot be solved by brute force, and requires a clever method! ;o)
+**NOTE**: As there are only 16384 routes, it is possible to solve this problem by trying every route. However, [Problem 67]({{ site.baseurl }}{% post_url 2017-06-21-Problem-67---Maximum-path-sum-II %}), is the same challenge with a triangle containing one-hundred rows; it cannot be solved by brute force, and requires a clever method! ;o)
 
 ## Answer
 

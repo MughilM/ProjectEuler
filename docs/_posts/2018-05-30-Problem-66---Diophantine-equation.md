@@ -2,59 +2,48 @@
 layout: post
 title: "Problem 66 - Diophantine equation"
 date: 2018-05-30 14:57
-mathjax: true
 number: 66
 ---
 
 ## Question
 
-Consider quadratic Diophantine equations of the form:
+Consider quadratic Diophantine equations of the form: \\[x^2-Dy^2=1\\]
 
-
-$$
-x^2-Dy^2=1
-$$
-
-
-For example, when $$D=13$$, the minimal solution in $$x$$ is $$649^2-13\times 180^2 = 1$$.
+For example, when \\(D=13\\), the minimal solution in \\(x\\) is \\(649^2-13\times 180^2 = 1\\).
 
 It can be assumed that there are no solutions in positive integers when $$D$$ is square.
 
-By finding minimal solutions in $$x$$ for $$D = \{2,3,5,6,7\}$$, we obtain the following:
-
-
-$$
-\begin{align*}
+By finding minimal solutions in \\(x\\) for \\(D = \{2,3,5,6,7\}\\), we obtain the following: 
+\\[
+\begin{aligned}
 3^2-2\times2^2 &= 1
-\\
+\cr
 2^2-3\times1^2 &= 1
-\\
+\cr
 \color{red}{9}^2-5\times4^2 &= 1
-\\
+\cr
 5^2-6\times2^2 &= 1
-\\
+\cr
 8^2-7\times3^2 &= 1
-\end{align*}
-$$
+\end{aligned}
+\\]
+Hence, by considering minimal solutions in \\(x\\) for \\(D\leq 7\\), the largest \\(x\\) is obtained when \\(D=5\\).
 
-
-Hence, by considering minimal solutions in $$x$$ for $$D\leq 7$$, the largest $$x$$ is obtained when $$D=5$$.
-
-Find the value of $$D\leq 1000$$ in minimal solutions of $$x$$ for which the largest value of $$x$$ is obtained.
+Find the value of \\(D\leq 1000\\) in minimal solutions of \\(x\\) for which the largest value of \\(x\\) is obtained.
 
 ## Answer
 
-Okay, so to make things clear after all the largest and minimal terminology, for a **fixed** $$D$$ (non-square), there are an **infinite** number of integer pairs $$(x,y)$$ that satisfy the equation above. This question is asking us to find the solution with the **smallest** $$x$$ for each $$D$$, and then report which $$D$$ has the **largest** "smallest" $$x$$ solution. Hopefully that clears up some confusion.
+Okay, so to make things clear after all the largest and minimal terminology, for a **fixed** \\(D\\) (non-square), there are an **infinite** number of integer pairs \\((x,y)\\) that satisfy the equation above. This question is asking us to find the solution with the **smallest** \\(x\\) for each \\(D\\), and then report which \\(D\\) has the **largest** "smallest" \\(x\\) solution. Hopefully that clears up some confusion.
 
 Now to the problem. A Diophantine equation is any polynomial equation where we only want integer solutions. A plethora of research has gone into these types of equations for so long because neat properties can be discovered. For this problem, I discovered that this Diophantine equation is actually known as Pell's equation. In fact, Pell's equation made its first appearance way back in 400 BC, and as such, simple algorithms are already in place to solve them.
 
 The [Wikipedia article](https://en.wikipedia.org/wiki/Pell%27s_equation) lists many ways to solve it, but given what we have encountered so far, the following is the easiest:
 
-> Let $$\frac{h_i}{k_i}$$ denote the sequence of convergents to the regular continued fraction for $$\sqrt{n}$$. This sequence is unique. Then the pair $$(x_1, y_1)$$ solving Pell's equation and minimizing $$x$$ satisfies $$x_1 = h_i$$ and $$y_1 = k_i$$ for some $$i$$.
+> Let \\(\frac{h_i}{k_i}\\) denote the sequence of convergents to the regular continued fraction for \\(\sqrt{n}\\). This sequence is unique. Then the pair \\((x_1, y_1)\\) solving Pell's equation and minimizing \\(x\\) satisfies \\(x_1 = h_i\\) and \\(y_1 = k_i\\) for some \\(i\\).
 
-The article uses $$n$$ in place of $$D$$. So to solve this, all we have to do is keep calculating the convergents for $$\sqrt{D}$$ until we encounter a pair which solves the equation. This is guaranteed to be the pair that minimizes $$x$$. Both problems [64]({{ site.baseurl }}{% post_url 2017-06-19-Problem-64---Odd-period-square-roots %}) and [65]({{ site.baseurl }}{% post_url 2017-06-19-Problem-65---Convergents-of-e %}) deal with computing convergents of continued fractions. We can use those algorithms in this problem, and test each convergent to see if it solves the equation.
+The article uses \\(n\\) in place of \\(D\\). So to solve this, all we have to do is keep calculating the convergents for \\(\sqrt{D}\\) until we encounter a pair which solves the equation. This is guaranteed to be the pair that minimizes \\(x\\). Both problems [64]({{ site.baseurl }}{% post_url 2017-06-19-Problem-64---Odd-period-square-roots %}) and [65]({{ site.baseurl }}{% post_url 2017-06-19-Problem-65---Convergents-of-e %}) deal with computing convergents of continued fractions. We can use those algorithms in this problem, and test each convergent to see if it solves the equation.
 
-I have one method which returns the periodic coefficients of the continued fraction of $$\sqrt{D}$$, and a loop which continuously calculates $$h_i$$ and $$k_i$$ above for testing the equation. Each solution pair is saved and then the maximum $$x$$ is grabbed later.
+I have one method which returns the periodic coefficients of the continued fraction of \\(\sqrt{D}\\), and a loop which continuously calculates \\(h_i\\) and \\(k_i\\) above for testing the equation. Each solution pair is saved and then the maximum \\(x\\) is grabbed later.
 
 ```python
 def periodCoeffs(S):
@@ -117,4 +106,4 @@ D: 1000/1000
 The max x occurs when D = 661 with (x, y) = (16421658242965910275055840472270471049, 638728478116949861246791167518480580).
 ```
 
-Thus, the largest minimal solution in $$x$$ occurs when $$D = \boxed{661}$$.
+Thus, the largest minimal solution in \\(x\\) occurs when \\(D = \boxed{661}\\).
