@@ -10,10 +10,9 @@ layout: default
         <h1 class="catalogue-title">{{ post.title }}</h1>
         <div class="catalogue-line"></div>
 
-        <p>
-          {{ post.excerpt }}
-        </p>
-
+		<p>
+          {{ post.excerpt | truncatewords: 30 }}
+		</p>
       </div>
     </a>
   {% endfor %}
