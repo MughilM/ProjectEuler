@@ -14,8 +14,6 @@ author:
 
 # Build settings
 markdown:       kramdown
-kramdown:
-    math_engine: katex
 include:
   - _pages
 
