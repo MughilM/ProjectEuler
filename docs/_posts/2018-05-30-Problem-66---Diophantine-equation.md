@@ -6,6 +6,8 @@ number: 66
 mathjax: true
 ---
 
+## Question
+
 Consider quadratic Diophantine equations of the form: $$x^2-Dy^2=1$$
 
 For example, when $$D=13$$, the minimal solution in $$x$$ is $$649^2-13\times 180^2 = 1$$.

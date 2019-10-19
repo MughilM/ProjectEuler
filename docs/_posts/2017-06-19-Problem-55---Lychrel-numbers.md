@@ -14,13 +14,13 @@ Not all numbers produce palindromes so quickly. For example,
 
 
 $$
-\begin{align*}
+\begin{aligned}
 349+943 &= 1292
 \\
 1292+2921 &= 4213
 \\
 4213+3124 &= 7337
-\end{align*}
+\end{aligned}
 $$
 
 

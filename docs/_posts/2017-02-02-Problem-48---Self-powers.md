@@ -42,7 +42,7 @@ Now is there a way to not calculate the very large raw values such as $$245^{245
 
 
 $$
-\begin{align*}
+\begin{aligned}
 3^2\equiv 9\mod 15
 \\
 3^4 = (3^2)^2\equiv ((3^2\mod 15)\times(3^2\mod 15))\mod 15\equiv(9\times9)\mod 15\equiv5\mod15
@@ -50,7 +50,7 @@ $$
 3^8=(3^4)^2\equiv((3^4\mod 15)\times(3^4\mod 15))\mod 15\equiv (5\times5)\mod 15\equiv10\mod15
 \\
 3^{16}\equiv((3^8\mod15)\times(3^8\mod15))\mod15\equiv(10\times10)\mod 15\equiv10\mod 15
-\end{align*}
+\end{aligned}
 $$
 
 
@@ -60,7 +60,7 @@ For example, let's try to do $$4^{49}\mod 11$$. First convert $$60$$ to binary. 
 
 
 $$
-\begin{align*}
+\begin{aligned}
 4\equiv 4\mod 11
 \\
 4^2\equiv (4\times4)\mod 11 \equiv16\mod11\equiv 5\mod 11
@@ -72,7 +72,7 @@ $$
 4^{16}\equiv (4^8\times 4^8)\mod 11\equiv 81\mod 11\equiv 4\mod 11
 \\
 4^{32}\equiv (4^{16}\times 4^{16})\mod 11\equiv 16\mod 11\equiv 5\mod 11
-\end{align*}
+\end{aligned}
 $$
 
 

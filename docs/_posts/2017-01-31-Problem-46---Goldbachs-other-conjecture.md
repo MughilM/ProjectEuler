@@ -12,7 +12,7 @@ It was proposed by Christian Goldbach that every odd composite number that can b
 
 
 $$
-\begin{align*}
+\begin{aligned}
 9 &= 7 + 2\times 1^2
 \\
 15 &= 7 + 2\times 2^2
@@ -24,7 +24,7 @@ $$
 27 &= 19 + 2\times 2^2
 \\
 33 &= 31 + 2\times 1^2
-\end{align*}
+\end{aligned}
 $$
 
 

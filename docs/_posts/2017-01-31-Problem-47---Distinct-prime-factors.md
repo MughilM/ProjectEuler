@@ -12,11 +12,11 @@ The first two consecutive numbers to have two distinct prime factors are:
 
 
 $$
-\begin{align*}
+\begin{aligned}
 14 &= 2\times 7
 \\
 15 &= 3\times 5
-\end{align*}
+\end{aligned}
 $$
 
 
@@ -24,13 +24,13 @@ The first three consecutive numbers to have three distinct prime factors are:
 
 
 $$
-\begin{align*}
+\begin{aligned}
 644 &= 2^2\times 7\times 23
 \\
 645 &= 3\times 5\times 43
 \\
 646 &= 2\times 17\times 19
-\end{align*}
+\end{aligned}
 $$
 
 
@@ -91,7 +91,7 @@ Therefore, the set of 4 integers we are looking for are,
 
 
 $$
-\begin{align*}
+\begin{aligned}
 134043 &= 3\times 7\times 13\times 491
 \\
 134044 &= 2^2\times 23\times 31\times 47
@@ -99,8 +99,9 @@ $$
 134045 &= 5\times 17\times 19\times 83
 \\
 134046 &= 2\times 3^2\times 11\times 677
-\end{align*}
+\end{aligned}
 $$
 
 
 and our starting integer is **134043**.
+

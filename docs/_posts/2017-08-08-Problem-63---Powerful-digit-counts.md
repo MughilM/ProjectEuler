@@ -26,7 +26,7 @@ From the right half of the inequality, we can immediately notice that $$a<10$$. 
 
 
 $$
-\begin{align*}
+\begin{aligned}
 10^{n-1} &< a^n
 \\
 \log_{10}\left(10^{n-1}\right) &< \log_{10}\left(a^n\right)
@@ -36,7 +36,7 @@ n-1 &< n\log_{10}a
 n-n\log_{10}a &< 1
 \\
 n &< \frac{1}{1-\log_{10}a}
-\end{align*}
+\end{aligned}
 $$
 
 

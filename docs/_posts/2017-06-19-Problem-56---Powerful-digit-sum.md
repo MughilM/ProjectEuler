@@ -16,7 +16,7 @@ Considering natural numbers of the form, $$a^b$$, where $$a, b < 100$$, what is 
 
 Another straightforward problem. As said before, Python is pretty good at handling large numbers such as these. Thus, all we need to loop through all $$a$$ and $$b$$, compute $$a^b$$, and add the digits together, keeping track of the maximum sum:
 
-```
+```python
 maxSum = 0
 for a in range(1, 100):
     for b in range(1, 100):

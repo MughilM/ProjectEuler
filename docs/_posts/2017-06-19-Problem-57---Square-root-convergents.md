@@ -20,7 +20,7 @@ By expanding this for the first four iterations, we get:
 
 
 $$
-\begin{align*}
+\begin{aligned}
 1 + \frac{1}{2} &= \frac{3}{2} = 1.5
 \\
 1 + \frac{1}{2+\frac{1}{2}} &= \frac{7}{5} = 1.4
@@ -28,7 +28,7 @@ $$
 1 + \frac{1}{2+\frac{1}{2+\frac{1}{2}}} &= \frac{17}{12} = 1.41666\dots
 \\
 1 + \frac{1}{2+\frac{1}{2+\frac{1}{2+\frac{1}{2}}}} &= \frac{41}{29} = 1.41379\dots
-\end{align*}
+\end{aligned}
 $$
 
 

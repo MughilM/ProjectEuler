@@ -36,7 +36,7 @@ The process can be summarized as follows:
 
 
 $$
-\begin{align*}
+\begin{aligned}
 a_0 &= 4, \frac{1}{\sqrt{23}-4} = \frac{\sqrt{23} + 4}{7} = 1 + \frac{\sqrt{23} - 3}{7}
 \\
 a_1 &= 1, \frac{7}{\sqrt{23}-3} = \frac{7(\sqrt{23} + 3)}{14} = 3 + \frac{\sqrt{23} - 3}{2}
@@ -52,7 +52,7 @@ a_5 &= 1, \frac{7}{\sqrt{23}-3} = \frac{7(\sqrt{23} + 3)}{14} = 3 + \frac{\sqrt{
 a_6 &= 3, \frac{1}{\sqrt{23}-4} = \frac{\sqrt{23} + 4}{7} = 1 + \frac{\sqrt{23} - 3}{7}
 \\
 a_7 &= 1, \frac{7}{\sqrt{23}-4} = \frac{7(\sqrt{23} + 4)}{7} = 8 + \sqrt{23} - 4
-\end{align*}
+\end{aligned}
 $$
 
 
@@ -62,7 +62,7 @@ The first ten continued fraction representation of (irrational) square roots are
 
 
 $$
-\begin{align*}
+\begin{aligned}
 \sqrt{2} &= [1;(2)], \text{period=1}
 \\
 \sqrt{3} &= [1:(1,2)], \text{period=2}
@@ -82,7 +82,7 @@ $$
 \sqrt{12} &= [3;(2,6)], \text{period=2}
 \\
 \sqrt{13} &= [3;(1,1,1,1,6)], \text{period=5}
-\end{align*}
+\end{aligned}
 $$
 
 

@@ -24,7 +24,7 @@ How many, not necessarily distinct, values of $$\,_nC_r$$ for $$1\leq n\leq 100$
 
 ## Answer
 
-Notice that the formula for $$\,_nC_r$$ has three factorials. Recomputing each of these factorials each time will be time-consuming and inefficient. Instead, we can find $n!$ for all $$0\leq n\leq 100$$, and grab the values we need for each computation. The reason we start from 0 is because $$0\leq r\leq n$$. Python's `math` package has a quick factorial function we can use:
+Notice that the formula for $$\,_nC_r$$ has three factorials. Recomputing each of these factorials each time will be time-consuming and inefficient. Instead, we can find $$n!$$ for all $$0\leq n\leq 100$$, and grab the values we need for each computation. The reason we start from 0 is because $$0\leq r\leq n$$. Python's `math` package has a quick factorial function we can use:
 
 ```python
 factorials = [math.factorial(i) for i in range(0, 101)]
