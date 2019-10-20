@@ -12,9 +12,9 @@ If $$p$$ is the perimeter of a right angle triangle with integral length sides, 
 
 
 $$
-\begin{align*}
+\begin{aligned}
 \{20,48,52\},\{24,45,51\},\{30,40,50\}
-\end{align*}
+\end{aligned}
 $$
 
 
@@ -28,7 +28,7 @@ So then how do we find all Pythagorean triples with perimeters less than or equa
 
 
 $$
-\begin{align*}
+\begin{aligned}
 A &= \begin{bmatrix}
 	1 & -2 & 2 \\
 	2 & -1 & 2 \\
@@ -44,7 +44,7 @@ C &= \begin{bmatrix}
 	-2 & 1 & 2 \\
 	-2 & 2 & 3
 \end{bmatrix}
-\end{align*}
+\end{aligned}
 $$
 
 
@@ -107,7 +107,7 @@ print('p =', unique[np.argmax(count)], 'has', np.max(count), 'solutions.')
 
 Notice I used `np.argmax()` to get the *location* of the maximum solutions. Running the code results in an output of,
 
-```python
+```
 p = 840 has 8 solutions.
 0.0012768364795974804 seconds.
 ```

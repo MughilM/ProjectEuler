@@ -49,7 +49,7 @@ print(limit * (limit + 1) // 2 - sum(sums))
 
 Notice we use `set()` to store the sums. This is because we might encounter numbers which have two separate sums. We only want to count each number once. Running the code above results in an output of,
 
-```python
+```
 4179871
 5.774933205017436 seconds.
 ```

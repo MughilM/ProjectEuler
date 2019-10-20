@@ -58,7 +58,7 @@ print(n)
 
 Notice the prime check is not something overly complicated. Running the program results in an output of,
 
-```python
+```
 5777
 0.08932956603362126 seconds.
 ```

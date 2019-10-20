@@ -38,7 +38,7 @@ for num in numbers[::-1]:
 
 Running this gives us the output of
 
-```python
+```
 906609
 0.13311525925925927 seconds.
 ```

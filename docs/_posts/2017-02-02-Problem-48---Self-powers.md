@@ -25,7 +25,7 @@ print(sum(nums ** nums) % 10 ** 10)
 
 Running this short program results in,
 
-```python
+```
 9110846700
 0.010996122083266172 seconds.
 ```
@@ -123,7 +123,7 @@ print(s % 10 ** 10)
 
 Running the code above results in,
 
-```python
+```
 9110846700
 0.008301412421343397 seconds.
 ```

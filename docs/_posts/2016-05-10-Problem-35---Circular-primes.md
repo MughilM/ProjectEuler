@@ -77,7 +77,7 @@ print(count)
 
 The output after running everything is,
 
-```python
+```
 55
 0.8581394861900083 seconds.
 ```

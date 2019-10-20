@@ -132,7 +132,7 @@ print(str(s)[0:10])
 
 Running the above gives us,
 
-```python
+```
 5537376230
 0.00033698765432098766 seconds.
 ```

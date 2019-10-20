@@ -43,7 +43,7 @@ print(np.sum(primeValues))
 
 Running the above results in,
 
-```python
+```
 142913828922
 1.0929866437847455 seconds.
 ```

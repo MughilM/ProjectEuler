@@ -37,7 +37,7 @@ print(s)
 
 At the end, the output is,
 
-```python
+```
 648
 9.362962962962964e-05 seconds.
 ```

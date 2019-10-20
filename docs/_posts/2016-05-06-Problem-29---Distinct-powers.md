@@ -41,7 +41,7 @@ print(len(s))
 
 Running the above produces output in time at all:
 
-```python
+```
 9183
 0.02056965463349574 seconds.
 ```

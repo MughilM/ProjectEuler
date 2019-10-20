@@ -125,7 +125,7 @@ print(triangle[0][0])
 
 Running the code above gives an output of,
 
-```python
+```
 1074
 0.0003338271604938272 seconds.
 ```

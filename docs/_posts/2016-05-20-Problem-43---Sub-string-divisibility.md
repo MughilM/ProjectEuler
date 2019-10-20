@@ -53,7 +53,7 @@ print(s)
 
 The output of the above is,
 
-```python
+```
 1406357289
 1430952867
 1460357289

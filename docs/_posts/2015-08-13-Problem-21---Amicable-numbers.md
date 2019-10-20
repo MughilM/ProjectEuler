@@ -44,18 +44,20 @@ $$
 2^2 5^1 11^1
 $$
 
-
 Notice we are just going through all possibilities of allocating the maximum number of exponents allowed for each factor. Now, watch how things simplify if we try to add them all:
+
+
 $$
-\begin{align*}
+\begin{aligned}
 2^0 5^0 11^0 + 2^1 5^0 11^0 + \cdots + 2^2 5^1 11^1 &=
 	(2^0 + 2^1 + 2^1)(5^0 11^0 + 5^1 11^0 + 5^0 11^1 + 5^1 11^1)
 \\ &=
 (2^0 + 2^1 + 2^2)(5^0 + 5^1)(11^0 + 11^1)
-\end{align*}
+\end{aligned}
 $$
-So it turns out we can just sum all the powers of each prime factor and multiply them to get the sum of the divisors! Of course, we'll have to remember to subtract $$n$$ at the end because we want *proper* divisors. There is one more simplification we can do here. Notice each sum in the parentheses is a geometric sum with the common ratio being the respective prime factor. Recall that if $$a$$ is the first term and $$r$$ is the common ratio, then $$\sum_{i=0}^n ar^i = a\left(\frac{1-r^{n+1}}{1-r}\right)$$. In our case, the first term is 1, and we can also switch the subtraction in both the numerator and denominator. So, for each prime factor $$p_i$$, with exponent $$k$$, the sum of $$1 + p_i^1 + p_i^2 + \cdots + p_i^k = \frac{p_i^{k+1} - 1}{p_i - 1}$$. Thus, we can simply evaluate this and multiply them together. Don't forget to subtract $$n$$ at the end due to wanting proper divisors. In the end, if we have $$m$$ prime factors $$p_1,p_2,\cdots,p_m$$ with exponents $$k_1,k_2,\cdots,k_m$$ respectively, then
 
+
+So it turns out we can just sum all the powers of each prime factor and multiply them to get the sum of the divisors! Of course, we'll have to remember to subtract $$n$$ at the end because we want *proper* divisors. There is one more simplification we can do here. Notice each sum in the parentheses is a geometric sum with the common ratio being the respective prime factor. Recall that if $$a$$ is the first term and $$r$$ is the common ratio, then $$\sum_{i=0}^n ar^i = a\left(\frac{1-r^{n+1}}{1-r}\right)$$. In our case, the first term is 1, and we can also switch the subtraction in both the numerator and denominator. So, for each prime factor $$p_i$$, with exponent $$k$$, the sum of $$1 + p_i^1 + p_i^2 + \cdots + p_i^k = \frac{p_i^{k+1} - 1}{p_i - 1}$$. Thus, we can simply evaluate this and multiply them together. Don't forget to subtract $$n$$ at the end due to wanting proper divisors. In the end, if we have $$m$$ prime factors $$p_1,p_2,\cdots,p_m$$ with exponents $$k_1,k_2,\cdots,k_m$$ respectively, then
 
 $$
 d(n) = \prod_{i=1}^m\frac{p_i^{k_i+1}-1}{p_i-1}-n
@@ -128,7 +130,7 @@ print(s)
 
 In the end, running the code above results in the output of,
 
-```python
+```
 220 284 1184 1210 2620 2924 5020 5564 6232 6368 
 31626
 0.26177382716049385 seconds.

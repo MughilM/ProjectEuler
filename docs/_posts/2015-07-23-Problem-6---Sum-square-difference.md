@@ -46,7 +46,7 @@ print(squaresum - sumsquare)
 
 Running this gives an output of,
 
-```python
+```
 25164150
 4.4641975308641976e-05 seconds.
 ```
@@ -65,9 +65,9 @@ Formulas exist for both, and can be proven using induction. Recall that $\sum_{i
 
 
 $$
-\begin{align*}
+\begin{aligned}
 S &= \left(\frac{100(100+1)}{2}\right)^2 - \frac{100(100+1)(2(100)+1)}{6}
 \\ &= 5050^2 - 338350
 \\ &= \boxed{25164150}
-\end{align*}
+\end{aligned}
 $$

@@ -87,7 +87,7 @@ An odd number $$n$$ can be written in the form $$2k+1$$. In our problem, $$1\leq
 
 
 $$
-\begin{align*}
+\begin{aligned}
 S &= \sum_{k=1}^{500}S_{2k+1} +1
 \\ &=
 \sum_{k=1}^{500}\left( 4(2k+1)^2 - 6(2k+1) + 6 \right) +1
@@ -106,5 +106,6 @@ S &= \sum_{k=1}^{500}S_{2k+1} +1
 16(41\,791\,750)+4(125\,250) + 2000 +1
 \\ &=
 \boxed{669\,171\,001}
-\end{align*}
+\end{aligned}
 $$
+

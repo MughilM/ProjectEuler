@@ -29,7 +29,7 @@ print(s)
 
 Notice the `isPalindrome` function is written using lambda calculus for a one-liner :). The output of the above program is,
 
-```python
+```
 872187
 0.49978133307417255 seconds.
 ```

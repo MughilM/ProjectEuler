@@ -28,7 +28,7 @@ To find the LCM of a list of numbers, you would see the maximum number of times 
 - 9 = 3 x 3
 - 10 = 2 x 5
 
-Above, we have 4 unique factors appearing: 2, 3, 5, and 7. I have ignored 1 because it is the multiplicative identity. The factor of 2 appears a maximum of **3** times, with the number 8. The factor of 3 appears a maximum of **2** times, with 9. Likewise, 5 and 7 appear a maximum of **1** time each. Therefore, $LCM(1,2,3,...,10) = 2\times 2\times 2\times 3\times 3\times 5\times 7 = \mathbf{2520}$.
+Above, we have 4 unique factors appearing: 2, 3, 5, and 7. I have ignored 1 because it is the multiplicative identity. The factor of 2 appears a maximum of **3** times, with the number 8. The factor of 3 appears a maximum of **2** times, with 9. Likewise, 5 and 7 appear a maximum of **1** time each. Therefore, $$LCM(1,2,3,...,10) = 2\times 2\times 2\times 3\times 3\times 5\times 7 = \mathbf{2520}$$.
 
 We can write code for our bound of 20. To find prime factorization, we divide by the lowest prime factor, until we reach the number 1. Other data structures we can use is the `defaultdict`, part of the `collections` package, which hold default values for keys not explicitly set in a hash map. Putting `int` as the argument initializes all dictionary values to 0. Additionally, the `np.unique` method can be used to return the unique values, and the counts of which each occurs.
 
@@ -70,7 +70,7 @@ print(prod)
 
 Running the code gives the output of:
 
-```python
+```
 232792560
 0.004698469135802469 seconds.
 ```

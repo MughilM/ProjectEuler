@@ -87,7 +87,7 @@ print(max([(k, v) for k, v in seqLengths.items()], key=lambda x: x[1]))
 
 Running the above results in,
 
-```python
+```
 (837799, 525)
 3.123749135802469 seconds.
 ```

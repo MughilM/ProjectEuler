@@ -25,13 +25,11 @@ $$
 (a+b+c)^2 = a^2+2ab+b^2+2ac+2bc+c^2
 $$
 
-
-
 From $$a+b+c = 1000$$, we have $$c = 1000 - a - b$$ and of course $$a^2 + b^2 = c^2$$. Using these three facts, we can simplify the above expression:
 
 
 $$
-\begin{align*}
+\begin{aligned}
 	1000^2 &= 2ab + 2ac + 2bc + 2c^2
 	\\
 	\frac{1000^2}{2} &= ab + a(1000 - a - b) + b(1000 - a - b) + (1000 - a - b)^2
@@ -45,7 +43,7 @@ $$
 	500 &= 1000-a-b+\frac{ab}{1000}
 	\\
 	a+b-500 &= \frac{ab}{1000}
-\end{align*}
+\end{aligned}
 $$
 
 
@@ -67,7 +65,7 @@ for b in range(1, 999):
 
 Running the above code results in the output of,
 
-```python
+```
 (a, b, c) = 200 375 425
 abc = 31875000
 0.033183526281024125 seconds.

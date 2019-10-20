@@ -37,7 +37,7 @@ for p in primes:
 
 Running the code results in an output of,
 
-```python
+```
 7652413
 0.048801859630159886 seconds.
 ```

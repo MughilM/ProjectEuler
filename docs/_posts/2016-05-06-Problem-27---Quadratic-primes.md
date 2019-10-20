@@ -42,13 +42,13 @@ In addition to saying $$b$$ is prime (and consequently odd, since $$b\neq 2$$), 
 
 
 $$
-\begin{align*}
+\begin{aligned}
 f(Odd) &= Odd^2 + Even\times Odd+Odd \\
 &= Odd + Even + Odd
 \\ &=
 Odd + Odd \\
 &= Even
-\end{align*}
+\end{aligned}
 $$
 
 
@@ -94,7 +94,7 @@ print(maxA, maxB, maxChain, maxA * maxB)
 
 Running the code above results in an output of,
 
-```python
+```
 -61 971 71 -59231
 0.33305679045121134 seconds.
 ```

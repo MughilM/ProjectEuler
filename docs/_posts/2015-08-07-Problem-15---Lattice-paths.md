@@ -40,7 +40,7 @@ print(grid[-1, -1])
 
 Running the above gives us,
 
-```python
+```
 137846528820
 0.0002860246913580247 seconds.
 ```

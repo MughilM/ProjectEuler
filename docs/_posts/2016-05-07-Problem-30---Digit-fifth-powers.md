@@ -12,13 +12,13 @@ Surprisingly there are only three numbers that can be written as the sum of the 
 
 
 $$
-\begin{align*}
+\begin{aligned}
 1634 &= 1^4 + 6^4 + 3^4 + 4^4
 \\
 8208 &= 8^4 + 2^4 + 0^4 + 8^4
 \\
 9474 &= 9^4 + 4^4 + 7^4 + 4^4
-\end{align*}
+\end{aligned}
 $$
 
 
@@ -45,7 +45,7 @@ print(s)
 
 The output after running is,
 
-```python
+```
 443839
 1.5520538642324573 seconds.
 ```

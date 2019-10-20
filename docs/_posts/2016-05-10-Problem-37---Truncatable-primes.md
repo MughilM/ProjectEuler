@@ -98,7 +98,7 @@ print(s)
 
 Running the code mass above results in an output of,
 
-```python
+```
 23
 53
 73

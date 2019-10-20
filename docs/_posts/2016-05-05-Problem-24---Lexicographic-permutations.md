@@ -74,7 +74,7 @@ for i, perm in enumerate(genPermutations(digits), 1):
 
 After running, the output is,
 
-```python
+```
 2783915460
 1.479740270925111 seconds.
 ```
@@ -114,9 +114,10 @@ print(perm)
 
 Running the above results in an output of,
 
-```python
+```
 2783915460
 7.94073132950361e-05 seconds.
 ```
 
 Notice the time is much faster, almost instantaneously.
+

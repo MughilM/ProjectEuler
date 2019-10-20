@@ -54,7 +54,7 @@ while notFound:
 
 The output of the above is,
 
-```python
+```
 5482660
 2.5649144140300306 seconds.
 ```

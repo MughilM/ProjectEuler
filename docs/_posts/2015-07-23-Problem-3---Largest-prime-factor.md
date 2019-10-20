@@ -32,7 +32,7 @@ for prime in primesToCheck[::-1]:
 
 Running this code gives us
 
-```python
+```
 6857
 0.01296553086419753 seconds.
 ```

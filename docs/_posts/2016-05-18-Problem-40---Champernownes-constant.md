@@ -45,7 +45,7 @@ print(prod)
 
 The output is,
 
-```python
+```
 210
 0.5373719607973275 seconds.
 ```

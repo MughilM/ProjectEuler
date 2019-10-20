@@ -50,7 +50,7 @@ for i in range(10000, 9000, -1):
 
 Running this short loop takes no time at all, and the output is:
 
-```python
+```
 932718654
 0.001404046054606883 seconds.
 ```

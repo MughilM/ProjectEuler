@@ -25,7 +25,7 @@ print(sum(num))
 
 Running gives,
 
-```python
+```
 1366
 0.00012523456790123458 seconds.
 ```

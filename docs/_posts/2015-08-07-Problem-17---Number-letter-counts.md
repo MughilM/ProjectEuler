@@ -69,7 +69,7 @@ print(total)
 
 Running the above gives an output of,
 
-```python
+```
 21124
 0.002460049382716049 seconds.
 ```

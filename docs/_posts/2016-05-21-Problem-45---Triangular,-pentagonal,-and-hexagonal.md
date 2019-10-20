@@ -44,7 +44,7 @@ print(n, hexNum)
 
 Running this quick loop results in,
 
-```python
+```
 27693 1533776805
 0.03727003511300319 seconds.
 ```

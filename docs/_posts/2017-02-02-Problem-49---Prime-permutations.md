@@ -37,7 +37,7 @@ for i in range(len(primes)):
 
 Running it results in the two such triplets the problem is talking about:
 
-```python
+```
 1487 4817 8147
 2969 6299 9629
 0.9628449275774557 seconds.

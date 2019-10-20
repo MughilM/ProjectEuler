@@ -12,7 +12,7 @@ A unit fraction contains 1 in the numerator. The decimal representation of the u
 
 
 $$
-\begin{align*}
+\begin{aligned}
 \frac{1}{2} &= 0.5 \\
 \frac{1}{3} &= 0.\overline{3} \\
 \frac{1}{4} &= 0.25 \\
@@ -22,7 +22,7 @@ $$
 \frac{1}{8} &= 0.125 \\
 \frac{1}{9} &= 0.\overline{1} \\
 \frac{1}{10} &= 0.1
-\end{align*}
+\end{aligned}
 $$
 
 
@@ -40,10 +40,10 @@ First, observe that $$gcd(10, 55) = 5\neq 1$$. Thus, multiply the fraction to ge
 
 
 $$
-\begin{align*}
+\begin{aligned}
 10^1 &\equiv 10\mod 11 = 10 \\
 10^2 &\equiv 100\mod 11 = 1
-\end{align*}
+\end{aligned}
 $$
 
 
@@ -101,7 +101,7 @@ print('d =', maxN, 'with', maxK, 'recurring digits.')
 
 Notice the GCD method is a relatively simple recursion. The recursion is made faster by guaranteeing one value will be lower than the error. This results in the recursion depth being as small as possible. Running the code above results in an output of,
 
-```python
+```
 d = 983 with 982 recurring digits.
 0.08353135778999571 seconds.
 ```

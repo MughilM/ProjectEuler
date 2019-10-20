@@ -57,7 +57,7 @@ print(makeChange(200, coins))
 
 Running the code above results in an output of,
 
-```python
+```
 73682
 1.9159925933914943 seconds.
 ```

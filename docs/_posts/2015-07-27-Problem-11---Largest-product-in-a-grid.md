@@ -86,7 +86,7 @@ print(maxproduct)
 
 Running gives an output of,
 
-```python
+```
 70600674
 0.002657975308641975 seconds.
 ```

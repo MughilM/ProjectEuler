@@ -33,8 +33,16 @@ while b <= 4000000:
 print(s)
 ```
 
-However, we can also solve this analytically. Notice the Fibonacci sequence above with an extra 1 at the beginning. If we assume $$F_1$$ and $$F_2$$ correspond to the first two ones, then it turns out that every 3rd Fibonacci number is even. Why? The number 1 is odd, Now, an odd integer plus another odd integer is an **even** integer. However, an odd integer plus an even integer gives an **odd** integer. There are no instances where we have two even integers, because it starts with two odd numbers. Therefore, we need to add every 3rd Fibonacci number. Recall that there is also a closed-form formula utilizing the golden ratio: $$F_n = \frac{\Phi^n - (1-\Phi)^{n}}{\sqrt{5}}$$. Now we need to find the index of the largest Fibonacci number less than 4 million. From the [Wikipedia article](https://en.wikipedia.org/wiki/Fibonacci_number#Computation_by_rounding), the formula to find the closest index (rounded down) of a Fibonacci number is
+Running this results in an output of,
 
+```
+4613732
+0.00011090000000002487 seconds.
+```
+
+### Bonus
+
+However, we can also solve this analytically. Notice the Fibonacci sequence above with an extra 1 at the beginning. If we assume $$F_1$$ and $$F_2$$ correspond to the first two ones, then it turns out that every 3rd Fibonacci number is even. Why? The number 1 is odd, Now, an odd integer plus another odd integer is an **even** integer. However, an odd integer plus an even integer gives an **odd** integer. There are no instances where we have two even integers, because it starts with two odd numbers. Therefore, we need to add every 3rd Fibonacci number. Recall that there is also a closed-form formula utilizing the golden ratio: $$F_n = \frac{\Phi^n - (1-\Phi)^{n}}{\sqrt{5}}$$. Now we need to find the index of the largest Fibonacci number less than 4 million. From the [Wikipedia article](https://en.wikipedia.org/wiki/Fibonacci_number#Computation_by_rounding), the formula to find the closest index (rounded down) of a Fibonacci number is
 
 $$
 n(F) = \lfloor\log_\Phi\left(F\sqrt(5) + \frac{1}{2}\right)\rfloor
@@ -47,7 +55,7 @@ Recall that the sum of a finite geometric series is $$a_1\frac{1-r^n}{1-r}$$ whe
 
 
 $$
-\begin{align*}
+\begin{aligned}
 	S &= \sum_{k=1}^{11}F_{3k}
 	\\ &=
 	\sum_{k=1}^{11}\frac{\Phi^{3k} - (1-\Phi)^{3k}}{\sqrt{5}}
@@ -58,5 +66,5 @@ $$
 		(1-\Phi)^3\frac{1-((1-\Phi)^3)^{11}}{1-(1-\Phi)^3}\right)
 	\\ &=
 	\boxed{4613732}
-\end{align*}
+\end{aligned}
 $$

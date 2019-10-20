@@ -23,7 +23,7 @@ Hence the first 12 terms will be:
 
 
 $$
-\begin{align*}
+\begin{aligned}
 	F_1 &= 1 \\
 	F_2 &= 1 \\
 	F_3 &= 2 \\
@@ -36,7 +36,7 @@ $$
 	F_{10} &= 55 \\
 	F_{11} &= 89 \\
 	F_{12} &= 144
-\end{align*}
+\end{aligned}
 $$
 
 
@@ -66,9 +66,10 @@ print(n)
 
 The output is,
 
-```python
+```
 4782
 0.0033090331152200118 seconds.
 ```
 
 Thus, the **4782**nd Fibonacci number has at least 1000 digits.
+

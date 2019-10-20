@@ -56,7 +56,7 @@ print(sum(products))
 
 Notice we are adding the products to the set to avoid duplicates. Running the double for loop above results in an output of,
 
-```python
+```
 45228
 9.040594220951176 seconds.
 ```

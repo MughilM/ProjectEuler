@@ -79,7 +79,7 @@ print(numProd // GCD, '/', denomProd // GCD)
 
 Running the above results in an output of,
 
-```python
+```
 16 / 64
 19 / 95
 26 / 65

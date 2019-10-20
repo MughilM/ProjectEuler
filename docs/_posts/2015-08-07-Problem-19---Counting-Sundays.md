@@ -3,7 +3,6 @@ layout: post
 title: "Problem 19 - Counting Sundays"
 date: 2015-08-07 20:43
 mathjax: true
-excerpt: Finding the number of Sundays that fall on the first of months in a given range.
 number: 19
 ---
 
@@ -66,7 +65,7 @@ print(numOfSundays)
 
 Running the above code generates the output of,
 
-```python
+```
 171
 0.0008150123456790123 seconds.
 ```
