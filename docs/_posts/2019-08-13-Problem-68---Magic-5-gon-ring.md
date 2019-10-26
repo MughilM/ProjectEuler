@@ -39,4 +39,98 @@ From the way how the strings are formed, we can deduce that **the number 10 has 
 
 So we know that "10" is on the outer ring. Now, we need a way to quickly go through all possible starting configurations of the ring, without falling to brute force. Note that we also shouldn't take into account two rings that differ by a rotation, as these are the same ring. 
 
-We can loop through all sets of 5 unique numbers, that contain "10", to place in the outer ring. Remember that the ring strings are reported starting with the smallest number. We can then actually have this fact enforce our ordering of the number placements
+We can loop through all sets of 5 unique numbers, that contain "10", to place in the outer ring. Remember that the ring strings are reported starting with the smallest number. We can then actually have this fact enforce our ordering of the number placements.
+
+Once we placed 5 numbers on the outer ring, we can fill in the first arm using 2 numbers. This sets in stone the sum that must be fulfilled with the other 4 arms. Thus, using the remaining available numbers, we can test numbers to see if a solution is possible.
+
+To recap, our methodology:
+
+- Generate all distinct sorted sets of 5 distinct numbers that contain the number 10. These are placed on the outer ring.
+- For each set, place 2 of the remaining 5 numbers onto the arm with the smallest number. This sets the required sum.
+- See if it's possible to satisfy the sum on the other 4 arms with the 3 remaining numbers. If it is possible, output the configuration. Otherwise, move on to the next set of 5.
+
+For technalities, I put the numbers of each arm as a row in a table, so I can quickly calculate the sums. We use `itertools.permutations` to loop through the groups of 5 numbers.
+
+```python
+def filterOut(toRemove, origList):
+    return [ele for ele in origList if ele not in toRemove]
+
+# Okay, so basically, we have to
+# loop through all possible locations
+# for numbers in the outer circle and
+# pair of numbers for the first petal.
+maxNum = 10
+numList = list(range(1, maxNum + 1))
+c = 0
+allPerms = []
+for i in range(1, maxNum + 1):
+    for perm in permutations(list(range(i + 1, maxNum + 1)), maxNum // 2 - 1):
+        if 10 in perm:
+            allPerms.append((i,) + perm)
+            c += 1
+for perm in allPerms:
+    # Get numbers that are remaining
+    copied = filterOut(perm, numList)
+    # print(perm, '==> ', end='')
+    # All possible pairs of numbers that can be placed
+    # into the 2 remaining circles.
+    for pair in permutations(copied, 2):
+        # print(pair, ' ', end='')
+        # Make a small 2d array of the sums...
+        ring = np.zeros((maxNum // 2, 3), dtype=int)
+        ring[:, 0] = perm
+        # Assign the pair...
+        ring[0, 1:] = pair
+        # The second number in the pair is also the
+        # second number in the second leg...
+        ring[1, 1] = pair[1]
+        # The first number in the pair is also
+        # the third number in the last leg
+        ring[-1, 2] = pair[0]
+        # Calculate the required sum
+        sumToMeet = sum(ring[0])
+        # Filter out the pair...
+        innerNumsLeft = filterOut(pair, copied)
+        # Okay, we have our sum and starting
+        # numbers. Now we can keep putting
+        # required numbers until it's impossible
+        # to put anymore. We keep removing from the list.
+        # If we finish the loop, and the list is empty,
+        # then we've placed everything..
+        i = 1  # Current sum row.
+        while len(innerNumsLeft) > 0 and i < maxNum // 2 - 1:
+            # Calculate number that should go here...
+            requiredNum = sumToMeet - sum(ring[i])
+            # If the required number is not in the list,
+            # then it's impossible, and we break and go
+            # to the next setup.
+            if requiredNum not in innerNumsLeft:
+                break
+            # If this is the last number
+            # placed, we also need to check
+            # the other leg that has been filled.
+
+            # Otherwise remove it, add it to
+            # the ring, and go to the next leg.
+            ring[i, 2] = requiredNum
+            ring[i + 1, 1] = requiredNum
+            innerNumsLeft.remove(requiredNum)
+            i += 1
+        # Check to see if we placed all the
+        # numbers, and that the last leg is
+        # the correct sum
+        if len(innerNumsLeft) == 0 and sum(ring[-1]) == sumToMeet:
+            print(''.join(map(str, np.ravel(ring))))
+```
+
+Running this outputs all 16-digit configurations:
+
+```
+2594936378711015
+2951051817673439
+6357528249411013
+6531031914842725
+0.8801705000000002 seconds.
+```
+
+Therefore, we can see that the maximum 16-digit string is **6531031914842725**.
