@@ -29,12 +29,16 @@ Find the value of $$n\leq 1\,000\,000$$ for which $$n/\phi(n)$$ is a maximum.
 ## Answer
 
 Okay, so the first order of business is to find out more about this function. [This](https://en.wikipedia.org/wiki/Euler's_totient_function) Wikipedia article states that the actual formula for this is
+
+
 $$
 \phi(n) = n\prod_{p|n}\left(1-\frac{1}{p}\right)
 $$
+
+
 Essentially, we take all the distinct prime numbers that divide $$n$$ and multiply according to the above. For example, 9 has only prime factor of 3. Thus, $$\phi(n) = 9\left(1-\frac{1}{3}\right) = 9\left(\frac{2}{3}\right) = 6$$, as the table shows.
 
-But notice, to calculate for large $$n$$, we can keep a Sieve going. Instead of marking off whether numbers are prime or not, we store a running value at each position. Furthermore, since we need the maximum value of $$n/\phi(n)$$, we'll actually need the **least** value of $$\prod_{p|n}\left(1 - \frac{1}{p}\right)$$. To keep track of which numbers are primes or not, we initialize the array with 1s. That way, if an element isn't 1, then it was multiplied by some other number, and so isn't a prime. I use the `numpy` package as it makes element-wise marking simple.
+But notice, to calculate for large $$n$$, we can keep a Sieve going. Instead of marking off whether numbers are prime or not, we store a running value at each position. Furthermore, since we need the maximum value of $$n/\phi(n)$$, we'll actually need the **least** value of $$\prod_{p\vert n}\left(1 - \frac{1}{p}\right)$$. To keep track of which numbers are primes or not, we initialize the array with 1s. That way, if an element isn't 1, then it was multiplied by some other number, and so isn't a prime. I use the `numpy` package as it makes element-wise marking simple.
 
 ```python
 # Basically make a sieve,
