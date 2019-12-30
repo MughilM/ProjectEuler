@@ -3,3 +3,23 @@
 ---
 
 @import 'tale';
+
+@import url('https://fonts.googleapis.com/css?family=EB+Garamond|Fira+Code&display=swap');
+@import url('//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css');
+
+body {
+	font-family: 'EB Garamond', serif;
+	font-size: 15pt;
+}
+
+.katex { font-size: 1em !important; }
+
+pre {
+	font-family: 'Fira Code', monospace;
+	font-size: 12pt;
+}
+
+code {
+	font-family: 'Fira Code', monospace;
+	font-size: 12pt;
+}
