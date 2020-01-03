@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Problem 73 - Counting fractions"
+title: "Problem 73 - Counting fractions in a range"
 date: 2017-08-04 14:52
 number: 73
 mathjax: true
