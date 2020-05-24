@@ -68,6 +68,7 @@ blockquote {
 
 .site-nav {
   ul {
+	display: inline-block;
     color: $nav-color;
     background-color: $nav-background-color;
   }
@@ -80,6 +81,22 @@ blockquote {
       border-color: $nav-color;
     }
   }
+  
+  .dropdown { position: relative; }
+  .dropdown:after {
+	display: block;
+	position: absolute;
+  }
+  .drop-nav {
+	display: none;
+	position: absolute;
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+	z-index: 999;
+  }
+  .dropdown:hover > .drop-nav { display: block; }
+  
 }
 
 .site-footer {
@@ -253,10 +270,26 @@ td {
       @if ($buttoncolor == light-outline) {
         border: 1px solid #fff;
       }
+	  
+	  display: inline-block;
+	  margin-bottom: 0.25em;
+	  padding: 0.5em 1em;
+	  font-family: "Source Sans Pro", sans-serif;
+	  font-size: 1rem;
+	  font-weight: bold;
+	  text-align: center;
+	  text-decoration: none;
+	  border-width: 0;
+	  border-radius: 0.25rem;
+	  cursor: pointer;
 
       &:hover {
         @include yiq-contrasted(mix(#000, $color, 20%));
+		
       }
+	  
+	  &:active { background-color: yellow; }
+	  &:focus { background-color: blue }
 
       &:visited {
         @include yiq-contrasted($color);
