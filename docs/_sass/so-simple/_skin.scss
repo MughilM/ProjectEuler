@@ -82,21 +82,6 @@ blockquote {
     }
   }
   
-  .dropdown { position: relative; }
-  .dropdown:after {
-	display: block;
-	position: absolute;
-  }
-  .drop-nav {
-	display: none;
-	position: absolute;
-	list-style: none;
-	padding: 0px;
-	margin: 0px;
-	z-index: 999;
-  }
-  .dropdown:hover > .drop-nav { display: block; }
-  
 }
 
 .site-footer {

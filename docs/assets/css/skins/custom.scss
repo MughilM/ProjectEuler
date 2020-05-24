@@ -23,6 +23,8 @@ $warning-color: #f89406 !default;
 $danger-color: #ee5f5b !default;
 $info-color: #52adc8 !default;
 
+
+
 /* Syntax highlighting (base16) colors */
 $base00: #fafafa !default;
 $base01: #073642 !default;
@@ -42,3 +44,7 @@ $base0e: #6c71c4 !default;
 $base0f: #d33682 !default;
 
 @import "so-simple/skin";
+
+blockquote {
+  font-style: italic;
+}

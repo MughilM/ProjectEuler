@@ -25,7 +25,7 @@
   {% unless page.show_excerpts == false %}
     <div class="entry-excerpt p-summary">
       {% if entry.excerpt %}
-        {{ entry.excerpt | truncate: 200 }}
+        {{ entry.excerpt | markdownify }}
       {% endif %}
     </div>
   {% endunless %}
