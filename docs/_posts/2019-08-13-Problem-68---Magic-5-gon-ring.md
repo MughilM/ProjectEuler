@@ -8,7 +8,7 @@ mathjax: true
 
 > Consider the following "magic" 3-gon ring, filled with numbers 1 to 6, and each line adding to nine.
 >
-> ![p068_1]({{site.url}}{{site.baseurl}}\assets\images\p068_1.png)
+> ![p068_1]({{site.url}}{{site.baseurl}}/assets/images/p068_1.png)
 >
 > Working **clockwise**, and starting from the group of three with the numerically lowest external node (4,3,2 in this example), each solution can be described uniquely. For example, the above solution can be described by the set: 4,3,2; 6,2,1; 5,1,3.
 >
@@ -29,7 +29,7 @@ mathjax: true
 >
 > Using the numbers 1 to 10, and depending on arrangements, it is possible to form 16- and 17-digit strings. What is the maximum **16-digit** string for a "magic" 5-gon ring?
 >
-> ![p068_2]({{site.url}}{{site.baseurl}}\assets\images\p068_2.png)
+> ![p068_2]({{site.url}}{{site.baseurl}}/assets/images/p068_2.png)
 >
 
 <!--more-->
