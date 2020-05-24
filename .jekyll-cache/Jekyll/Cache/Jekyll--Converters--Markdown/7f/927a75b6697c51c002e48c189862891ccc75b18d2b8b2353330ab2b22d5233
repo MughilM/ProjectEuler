@@ -1,0 +1,117 @@
+I"�1<h2 id="question">Question</h2>
+
+<p>A number chain is created by continuously adding the square of the digits in a number to form a new number until it has been seen before.</p>
+
+<p>For example,</p>
+
+\[44\rightarrow 32\rightarrow 13\rightarrow 10\rightarrow\mathbf{1}\rightarrow\mathbf{1}
+\\
+85\rightarrow\mathbf{89}\rightarrow145\rightarrow 42\rightarrow20 \rightarrow4\rightarrow16\rightarrow37\rightarrow58\rightarrow\mathbf{89}\]
+
+<p>Therefore any chain that arrives at 1 or 89 will become stuck in an endless loop. What is most amazing is that EVERY starting number will eventually arrive at 1 or 89.</p>
+
+<p>How many starting numbers below ten million will arrive at 89?</p>
+
+<h2 id="answer">Answer</h2>
+
+<h3 id="first-try">First try</h3>
+
+<p>From the reading of the problem, this seems like a classic dynamic programming problem. We keep updating a list of numbers that end in 89 or 1. For each <strong>new number we haven’t seen</strong>, we calculate the chain. As soon as we encounter a number that we have seen, we immediately set <strong>all numbers in the chain</strong> to either 89 or 1.</p>
+
+<p>On the surface, this seems like an efficient solution. In fact, I thought so, and so I coded it up. However, I was wrong. When I ran it for the limit of ten million, I barely managed to make it under one minute, the recommended limit.</p>
+
+<h3 id="second-try">Second try</h3>
+
+<p>So, clearly, there should be a much faster solution. When enhancements can we make? For one thing, <strong>the largest sum of squares possible results</strong> from having seven 9s (9,999,999), and is \(7\times9^2=567\), or seven 9s. So, in fact, we can do the same algorithm, <strong>but only up to 567</strong>. For all numbers above that, we only calculate the sum of squares of the digits <strong>just once</strong>, and simply look up the eventual ending.</p>
+
+<p>This second algorithm managed to shave off about 18-20 seconds off the initial algorithm, but it was still over half a minute. Can we do even better?</p>
+
+<h3 id="third-and-final-try">Third (and final) try</h3>
+
+<p>The key observation to make is that <strong>the order of the digits do not matter</strong>. For example, the numbers 5332, 5323, 5233, 3532, 3352, 3325, 3235, 3253, 3523, 2335, 2353, and 2533 all compute to a digit squared sum of \(25+9+9+4=\mathbf{47}\). Can we take advantage of this?</p>
+
+<p>Indeed we can :) To go through all of our numbers, without actually visiting each number, I’ll first show an example where we are searching up to 10000 (so each number is a maximum of <strong>4</strong> digits).</p>
+
+<h4 id="example">Example</h4>
+
+<p>Our search space will eventually consist of numbers of the form \(abcd\), where the digits are in <strong>nonincreasing order.</strong> In other words, \(a\geq b\geq c\geq d\). Our number 5332 from above would be part of this set, <strong>but none of its permutations</strong>, and that’s what we want.</p>
+
+<p>Once we get this set (details to come), are we done? No! Remember 5332 had <strong>11 other permutations</strong> we had to worry about, which <strong>all end at 89</strong> and need to be accounted for. So, for each number in our set, we have to calculate the <strong>number of distinct permutations it has.</strong> It is not too complicated to calculate, as the only thing we have to watch out for is repeated digits.</p>
+
+<p>If all our digits are different, then there are exactly \(4! = 24\) ways of ordering them. However, there are only 12 permutations of 5332, because there are 2 3s! We have to divide by the number of ways these two 3s can be arranged, which is just 2, and so \(24/2 = 12\). In general, if \(c_d\) is the number of times the digit \(d\) appears in the number, then <strong>the number of permutations of our 4-digit number is</strong></p>
+
+\[Perm(abcd) = \frac{24}{c_0!c_1!\dots c_9!} = 
+	\frac{24}{\prod_{d=0}^9 c_d!}\]
+
+<p><strong>What about leading 0s?</strong> If our original number was 8400, then the above formula also counts “numbers” such as 0480 and 0084. But this actually works in our favor because we are counting numbers with less than 4 digits! So no external correction is needed here.</p>
+
+<h3 id="final-result">Final Result</h3>
+
+<p>Once we have our number set, and the number of times it happens, then all we need to do is calculate the chain for each number, making sure we are saving as we go. If we encounter an 89 chain, then we add the number of permutations to a running total.</p>
+
+<p>To generate the number set, I use <code class="highlighter-rouge">yield</code> and create a generator. That way, the entire list isn’t stored in memory. The actual algorithm is a recursive one, which keeps track of the remaining length of the number. If the length left is 0, then we return the number. Otherwise, we append each possible digit, recurse with each of them, and decrement the length by 1. For the initial loop, I do not include 0, since we can’t have leading zeros.</p>
+
+<p>Notice the three functions that calculate the sum of the squares of the digits, loop through all possible numbers, and count the number of permutations. A quick way to get each digit, is to get the remainder when the number is divided by 10. To go to the next digit, we integer divide by 10, which throws away the last digit.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sumOfSquareOfDigits</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">num</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="p">(</span><span class="n">num</span> <span class="o">%</span> <span class="mi">10</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">//</span> <span class="mi">10</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+
+<span class="k">def</span> <span class="nf">loopNumbers</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">currNum</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">currNum</span>
+        <span class="k">return</span>
+    <span class="c1"># Top level
+</span>    <span class="k">if</span> <span class="n">currNum</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="c1"># Don't start with a 0
+</span>        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">loopNumbers</span><span class="p">(</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">number</span>
+    <span class="c1"># Any other level...
+</span>    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">currNum</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>  <span class="c1"># &lt;-- Zero allowed
+</span>            <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">loopNumbers</span><span class="p">(</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">currNum</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">n</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">number</span>
+
+<span class="k">def</span> <span class="nf">countPermutations</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">nstr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">digits</span> <span class="o">=</span> <span class="s">'0123456789'</span>
+    <span class="k">return</span> <span class="n">math</span><span class="p">.</span><span class="n">factorial</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nstr</span><span class="p">))</span> <span class="o">//</span> \
+        <span class="n">np</span><span class="p">.</span><span class="n">prod</span><span class="p">([</span><span class="n">math</span><span class="p">.</span><span class="n">factorial</span><span class="p">(</span><span class="n">nstr</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">digit</span><span class="p">))</span> <span class="k">for</span> <span class="n">digit</span> <span class="ow">in</span> <span class="n">digits</span><span class="p">])</span>
+
+
+<span class="n">is89</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">is1</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">total89</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">loopNumbers</span><span class="p">(</span><span class="mi">7</span><span class="p">):</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">countPermutations</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">number</span>
+    <span class="n">startingSquare</span> <span class="o">=</span> <span class="n">sumOfSquareOfDigits</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="c1"># Check to see if it's in the 89 list...
+</span>    <span class="k">if</span> <span class="n">startingSquare</span> <span class="ow">in</span> <span class="n">is89</span><span class="p">:</span>
+        <span class="n">total89</span> <span class="o">+=</span> <span class="n">count</span>
+    <span class="k">elif</span> <span class="n">startingSquare</span> <span class="ow">in</span> <span class="n">is1</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">while</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">89</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">sumOfSquareOfDigits</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">89</span><span class="p">:</span>
+            <span class="n">is89</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">startingSquare</span><span class="p">)</span>
+            <span class="n">total89</span> <span class="o">+=</span> <span class="n">count</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">is1</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">startingSquare</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">total89</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running this long code gets us an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>8581146
+0.2859901000000001 seconds.
+</code></pre></div></div>
+
+<p>Thus, we have <strong>8581146</strong> numbers below 10 million that end in 89, in almost a quarter of a second! Much better than the near-minute times I was getting earlier.</p>
+:ET

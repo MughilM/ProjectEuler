@@ -1,0 +1,65 @@
+I"�<h2 id="question">Question</h2>
+
+<p>It is possible to write five as a sum in exactly six different ways:</p>
+
+<p>[\begin{aligned}
+&amp;4 + 1
+<br />
+&amp;3 + 2
+<br />
+&amp;3 + 1 + 1
+<br />
+&amp;2 + 2 + 1
+<br />
+&amp;2 + 1 + 1 + 1
+<br />
+&amp;1 + 1 + 1 + 1 + 1
+\end{aligned}]</p>
+
+<p>How many different ways can one hundred be written as a sum of at least two positive integers?</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>Breaking up a number into sets of sums like this are called finding the <strong>partitions</strong> of a number. It is an ancient concept and hence the area of extensive research, which is good for us because chances are someone has found a way to calculate these.</p>
+
+<p>The actual definition of a partition also includes the number itself (in this case it would include “5” as a “sum”). The number of partitions of a number \(n\) is \(p(n)\). In our example, \(p(5)=7\). The smart thing to do is to calculate the partitions this way and simply subtract one from the final answer.</p>
+
+<h3 id="recurrence-relation">Recurrence Relation</h3>
+
+<p>It isn’t difficult to get some intuitive sense that the number of partitions of \(n\) would somehow depend on the values of \(p(n)\) before it. The <a href="https://en.wikipedia.org/wiki/Partition_function_(number_theory)#Recurrence_relations">Wikipedia</a> article shows that the following recursive definition exists for \(p(n)\):</p>
+
+<p>[p(n) = \sum_{k\neq 0}^\infty (-1)^{k+1}p\left(n - \frac{k(3k-1)}{2}\right)]</p>
+
+<p>where \(p(0)=1\) and \(p(n) = 0\) if \(n&lt;0\). Thus, even though the sum goes to infinity, it will consist of finitely many non-zero terms. Additionally, \(\frac{k(3k-1)}{2}\) steadily increases as \(k\) goes \(1, -1, 2, -2, 3, -3, 4, \dots\). In fact, these are the pentagonal numbers, which have other uses. Thus, this is a perfect application of a while loop to properly add all the non-zero terms.</p>
+
+<p>This problem is pretty simple to code, with setting our array and our base case, and simply looping up to the limit, applying the rule above. Remember, \(p(n)\) includes \(n\) itself as a “sum”, so when we report our answer, we subtract one.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">limit</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">limit</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Base case
+</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)):</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1"># lambda function of pentagonal number
+</span>    <span class="n">pent</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="k">while</span> <span class="n">pent</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">i</span><span class="p">:</span>
+        <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">pent</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">int</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c1"># If k is positive, then it turns into
+</span>        <span class="c1"># its negative counterpart,
+</span>        <span class="c1"># Otherwise, it goes to the next number
+</span>        <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="n">limit</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The output after running is,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>190569291
+0.0013518999999999615 seconds.
+</code></pre></div></div>
+
+<p>Therefore, 100 can be written as a sum of positive integers in <strong>190569291</strong> ways.</p>
+:ET

@@ -1,0 +1,56 @@
+I"Ù<h2 id="question">Question</h2>
+
+<p>A Pythagorean triplet is a set of three natural numbers, \(a&lt;b&lt;c\), for which,
+\(a^2+b^2=c^2\)
+For example, \(3^2+4^2=9+16=25=5^2\).</p>
+
+<p>There exists exactly one Pythagorean triplet for which \(a+b+c=1000\). Find the product \(abc\).</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>The brute force method would simply loop through all \(a, b, c\) values from 1 to 999. However, as there are three different variables, this would take a substantial amount time. But we can use our given relationships to reduce the search space to just two of the variables: Note that</p>
+
+\[(a+b+c)^2 = a^2+2ab+b^2+2ac+2bc+c^2\]
+
+<p>From \(a+b+c = 1000\), we have \(c = 1000 - a - b\) and of course \(a^2 + b^2 = c^2\). Using these three facts, we can simplify the above expression:</p>
+
+\[\begin{aligned}
+	1000^2 &amp;= 2ab + 2ac + 2bc + 2c^2
+	\\
+	\frac{1000^2}{2} &amp;= ab + a(1000 - a - b) + b(1000 - a - b) + (1000 - a - b)^2
+	\\
+	\frac{1000^2}{2} &amp;= ab + 1000a - a^2 - ab + 1000b - ab - b^2 - 1000^2 - 2(1000)(a+b) + (a+b)^2
+	\\
+	\frac{1000^2}{2} &amp;= 1000a-a^2+1000b-ab-b^2-1000^2-2000a-2000b+a^2+2ab+b^2
+	\\
+	\frac{1000^2}{2} &amp;= 1000^2-1000a-1000b+ab
+	\\
+	500 &amp;= 1000-a-b+\frac{ab}{1000}
+	\\
+	a+b-500 &amp;= \frac{ab}{1000}
+\end{aligned}\]
+
+<p>That last statement is the condition we need to check for each pair \(a,b\). Therefore, our code has reduced to a double for loop:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">999</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">-</span> <span class="mi">500</span> <span class="o">==</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">a</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">b</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'(a, b, c)'</span><span class="p">,</span> <span class="s">'='</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'abc'</span><span class="p">,</span> <span class="s">'='</span><span class="p">,</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="o">*</span> <span class="n">c</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="s">'seconds.'</span><span class="p">)</span>
+            <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running the above code results in the output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(a, b, c) = 200 375 425
+abc = 31875000
+0.033183526281024125 seconds.
+</code></pre></div></div>
+
+<p>Therefore, <strong>31875000</strong> is our answer.</p>
+:ET

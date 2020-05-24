@@ -1,0 +1,91 @@
+I"w<h2 id="question">Question</h2>
+
+<p>Euler discovered the remarkable quadratic formula:</p>
+
+<p>[n^2+n+41]</p>
+
+<p>It turns out that the formula will produce 40 primes for the consecutive integer values \(0\leq n\leq 39\). However, when \(n = 40, 40^2+40+41=40(40+1)+41\) is divisible by 41, and certainly when \(n=41,41^2+41+41\) is clearly divisible by 41.</p>
+
+<p>The incredible formula \(n^2-79n+1601\) was discovered, which produces 80 primes for the consecutive values \(0\leq n\leq 79\). The product of the coefficients, -79 and 1601, is -126479.</p>
+
+<p>Considering quadratics of the form:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>[n^2+an+b,\text{ where }</td>
+      <td>a</td>
+      <td>&lt;1000\text{ and }</td>
+      <td>b</td>
+      <td>\leq 1000]</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>where the bars indicate absolute value.</p>
+
+<p>Find the product of the coefficients, \(a\) and \(b\), for the quadratic expression that produces the maximum number of primes for consecutive values of \(n\), starting \(n=0\).</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>At first glance, it seems like we have to all possible values \(a\) and \(b\) satisfying the condition above. However, there are a couple of observations we can make.</p>
+
+<p>Let \(f(n) = n^2+an+b\). The problem says that \(f(0)\) should be prime. However, plugging in \(n=0\), we get that \(f(0) = b\). Therefore, \(\mathbf{b}\) <strong>must be prime</strong>. Additionally, it must also be positive. There are a bit more than 150 primes below 1000, so that drastically reduces the search space. Additionally, \(b\neq 2\), because if \(n\) is even, then \(n^2 + an\) will be even, and the resultant \(f(n)\) will also be even. There is only one even prime (2) so it is impossible to have more than 2 consecutive primes.</p>
+
+<p>In addition to saying \(b\) is prime (and consequently odd, since \(b\neq 2\)), we can also say that \(a\) is odd. Observe what happens when \(a\) is even and \(n\) is odd:</p>
+
+<p>[\begin{aligned}
+f(Odd) &amp;= Odd^2 + Even\times Odd+Odd <br />
+&amp;= Odd + Even + Odd
+\ &amp;=
+Odd + Odd <br />
+&amp;= Even
+\end{aligned}]</p>
+
+<p>So every other \(n\), \(f(n)\) will turn out to be even, which leads to non-prime integers. On the other hand, if \(a\) is odd, then \(n^2+an\) will always to turn out to be even, and consequently \(f(n)\) will be odd, which allows for possibilities for prime numbers.</p>
+
+<p>Finally, \(a&gt;-b\), because otherwise, that allows \(f(n)\) to be negative. In the end, we need a double for loop that loops our constrained search space. For testing if \(f(n)\) is prime, we can do the generic loop until \(\sqrt{f(n)}\). The <code class="highlighter-rouge">primesieve</code> package once again makes it appearance to find all prime numbers under 1000.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">isPrime</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">if</span> <span class="n">p</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="o">%</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">return</span> <span class="bp">True</span>
+
+<span class="n">limit</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">Bs</span> <span class="o">=</span> <span class="n">primesieve</span><span class="p">.</span><span class="n">primes</span><span class="p">(</span><span class="n">limit</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="n">maxChain</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="n">maxA</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">maxB</span> <span class="o">=</span> <span class="mi">41</span>
+<span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">Bs</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
+        <span class="c1"># Make the function
+</span>        <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b</span>
+        <span class="c1"># We know f(0) = b is prime, so start
+</span>        <span class="c1"># from n = 1.
+</span>        <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">isPrime</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">n</span><span class="p">)):</span>
+            <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># Check to see if chain length is bigger...
+</span>        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">maxChain</span><span class="p">:</span>
+            <span class="n">maxChain</span> <span class="o">=</span> <span class="n">n</span>
+            <span class="n">maxA</span> <span class="o">=</span> <span class="n">a</span>
+            <span class="n">maxB</span> <span class="o">=</span> <span class="n">b</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">maxA</span><span class="p">,</span> <span class="n">maxB</span><span class="p">,</span> <span class="n">maxChain</span><span class="p">,</span> <span class="n">maxA</span> <span class="o">*</span> <span class="n">maxB</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running the code above results in an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-61 971 71 -59231
+0.33305679045121134 seconds.
+</code></pre></div></div>
+
+<p>Thus, \(f(n) = n^2 - 61n+971\) produces a chain of 71 consecutive primes from \(0\leq n\leq 70\). The product of \(a\) and \(b\) is thus <strong>-59231</strong>.</p>
+:ET

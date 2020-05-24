@@ -1,0 +1,71 @@
+I"<h2 id="question">Question</h2>
+
+<p>2520 is the smallest number that can be divided by each of the numbers by 1 to 10 without any remainder.</p>
+
+<p>What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>Essentially, the question is asking us to find the Least Common Multiple (LCM) of all the numbers from 1 to 20. If we have the prime factorization of each number, then finding the LCM is simple.</p>
+
+<p>To find the LCM of a list of numbers, you would see the maximum number of times each prime factor appears in the prime factorization of each number. Then, you will multiply each factor this many times, and the result is the LCM. Here is an example using the example given in the question:</p>
+
+<ul>
+  <li>2 = 2</li>
+  <li>3 = 3</li>
+  <li>4 = 2 x 2</li>
+  <li>5 = 5</li>
+  <li>6 = 2 x 3</li>
+  <li>7 = 7</li>
+  <li>8 = 2 x 2 x 2</li>
+  <li>9 = 3 x 3</li>
+  <li>10 = 2 x 5</li>
+</ul>
+
+<p>Above, we have 4 unique factors appearing: 2, 3, 5, and 7. I have ignored 1 because it is the multiplicative identity. The factor of 2 appears a maximum of <strong>3</strong> times, with the number 8. The factor of 3 appears a maximum of <strong>2</strong> times, with 9. Likewise, 5 and 7 appear a maximum of <strong>1</strong> time each. Therefore, \(LCM(1,2,3,...,10) = 2\times 2\times 2\times 3\times 3\times 5\times 7 = \mathbf{2520}\).</p>
+
+<p>We can write code for our bound of 20. To find prime factorization, we divide by the lowest prime factor, until we reach the number 1. Other data structures we can use is the <code class="highlighter-rouge">defaultdict</code>, part of the <code class="highlighter-rouge">collections</code> package, which hold default values for keys not explicitly set in a hash map. Putting <code class="highlighter-rouge">int</code> as the argument initializes all dictionary values to 0. Additionally, the <code class="highlighter-rouge">np.unique</code> method can be used to return the unique values, and the counts of which each occurs.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">primesieve</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="k">def</span> <span class="nf">primeFactor</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">primes</span><span class="p">,</span> <span class="n">factors</span><span class="p">):</span>
+    <span class="c1"># Base case:
+</span>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">factors</span>
+    <span class="k">for</span> <span class="n">prime</span> <span class="ow">in</span> <span class="n">primes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">prime</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">factors</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">prime</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">primeFactor</span><span class="p">(</span><span class="n">n</span> <span class="o">//</span> <span class="n">prime</span><span class="p">,</span> <span class="n">primes</span><span class="p">,</span> <span class="n">factors</span><span class="p">)</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">primes</span> <span class="o">=</span> <span class="n">primesieve</span><span class="p">.</span><span class="n">primes</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">maxTimes</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="c1"># Find factorization for each number up to 20.
+</span><span class="n">allFactors</span> <span class="o">=</span> <span class="p">[</span><span class="n">primeFactor</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">primes</span><span class="p">,</span> <span class="p">[])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+
+<span class="k">for</span> <span class="n">factorization</span> <span class="ow">in</span> <span class="n">allFactors</span><span class="p">:</span>
+    <span class="n">unique</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">unique</span><span class="p">(</span><span class="n">factorization</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="c1"># Check if the number of times each factor appears is more
+</span>    <span class="c1"># than the maximum saved.
+</span>    <span class="k">for</span> <span class="n">factor</span><span class="p">,</span> <span class="n">amount</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique</span><span class="p">,</span> <span class="n">counts</span><span class="p">):</span>
+        <span class="n">maxTimes</span><span class="p">[</span><span class="n">factor</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxTimes</span><span class="p">[</span><span class="n">factor</span><span class="p">],</span> <span class="n">amount</span><span class="p">)</span>
+
+<span class="c1"># Go through each factor, and multiply
+</span><span class="n">prod</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">factor</span> <span class="ow">in</span> <span class="n">maxTimes</span><span class="p">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="c1"># We need to multiply the factor maxTimes[factor]
+</span>    <span class="c1"># number of times....or raise it to the power.
+</span>    <span class="n">prod</span> <span class="o">*=</span> <span class="n">factor</span> <span class="o">**</span> <span class="n">maxTimes</span><span class="p">[</span><span class="n">factor</span><span class="p">]</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">prod</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running the code gives the output of:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>232792560
+0.004698469135802469 seconds.
+</code></pre></div></div>
+
+<p>Thus, <strong>232792560</strong> is our answer. With this specific problem, it might have been faster from the onset to do it by hand. However, if our bound was something much larger, such as 100 or 200, then the code generalizes. Though, with those large values, you would have to worry about overflowing.</p>
+:ET

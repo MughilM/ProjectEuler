@@ -1,0 +1,106 @@
+I")*<h2 id="question">Question</h2>
+
+<p>The number 145 is well known for the property that the sum of the factorial of its digits is equal to 145:</p>
+
+\[1! + 4! + 5! = 1 + 24 + 120 = 145\]
+
+<p>Perhaps less well known is 169, in that it produces the longest chain of numbers that link back to 169; it turns out that there are only three such loops that exist:</p>
+
+\[\begin{aligned}
+	&amp; 169 \rightarrow 363601 \rightarrow 1454 \rightarrow 169
+	\\
+	&amp; 871 \rightarrow 45361 \rightarrow 871
+	\\
+	&amp; 872 \rightarrow 45362 \rightarrow 872
+\end{aligned}\]
+
+<p>It is not difficult to prove that EVERY starting number will eventually get stuck in a loop. For example,</p>
+
+\[\begin{aligned}
+	&amp; 69 \rightarrow 363600 \rightarrow 1454 \rightarrow 169 \rightarrow 363601\,(\rightarrow 1454)
+	\\
+	&amp; 78 \rightarrow 45360 \rightarrow 871 \rightarrow 45361\,(\rightarrow 871)
+	\\
+	&amp; 540 \rightarrow 145\,(\rightarrow 145)
+\end{aligned}\]
+
+<p>Starting with 69 produces a chain of five non-repeating terms, but the longest non-repeating chain with a starting number below one million is sixty terms.</p>
+
+<p>How many chains, with a starting number below one million, contain exactly sixty non-repeating terms?</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>First, before we do a loop, we need to figure out how to calculate the sum of the factorials of a number’s digits. A direct way in Python is to convert the number to a string, and go through each digit (now a character) and casting back to integer. However, repeated string and integer casting will slow things down, so it would be nice if we can work with purely integers.</p>
+
+<p>Notice that the ones digit in a number \(n\) is the remainder when \(n\) is divided by 10 i.e. \(n\mod 10\). This is how we can obtain the ones digit. We can also completely remove if we do \(\lfloor n/10 \rfloor\), as the ones digit will end up as a decimal. With these two steps, we can keep reducing \(n\), calculating the factorials and adding them onto a running sum. The written function is below. I use the <code class="highlighter-rouge">factorial</code> function from the <code class="highlighter-rouge">math</code> package.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">factorialDigitSum</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="nb">sum</span> <span class="o">+=</span> <span class="n">math</span><span class="p">.</span><span class="n">factorial</span><span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">//=</span> <span class="mi">10</span>
+    <span class="nb">sum</span> <span class="o">+=</span> <span class="n">math</span><span class="p">.</span><span class="n">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span>
+</code></pre></div></div>
+
+<p>Now, how can we efficiently calculate the length of chains? Say that we’ve calculated the chain length of a number \(a\) and we are currently calculating the chain of \(b\). If we encounter \(a\) during the chain of \(b\), then we can stop, and simply add on the chain length of \(a\) to that of \(b\)! Additionally, we can also do it to numbers that we encountered before \(a\). This drastically reduces the number of computations we need to do.</p>
+
+<p>However, which numbers do we need to store? We’ll obviously need to store at least the chain lengths of numbers up to one million, but chains of numbers less than one million have a good chance of containing terms greater than the limit. To combat this, Python has a data structure called <code class="highlighter-rouge">defaultdict</code> in the <code class="highlighter-rouge">collections</code> package. It allows us to set a default value for all keys in a standard dictionary. In our case, it will be 0, as we are storing the chain length.</p>
+
+<p>We can also store the initial loop chain lengths to prevent any other numbers from falling into a loop. <strong>There is actually one more number that equals itself when taking the sum of the factorials of its digits</strong>. That number is <strong>40585</strong>. I encountered this when I first ran my program and noticed it got stuck at this number. Putting together everything we’ve covered:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">chainLengths</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="c1"># 1! = 1, 2! = 2, 145! ==&gt; 145
+# 40585! ==&gt; 40585
+# set these to 1
+</span><span class="n">chainLengths</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">chainLengths</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">chainLengths</span><span class="p">[</span><span class="mi">145</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">chainLengths</span><span class="p">[</span><span class="mi">40585</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1"># 871, 45361, 872, 45362
+# have lengths of 2
+</span><span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">871</span><span class="p">,</span> <span class="mi">872</span><span class="p">,</span> <span class="mi">45361</span><span class="p">,</span> <span class="mi">45362</span><span class="p">]:</span>
+    <span class="n">chainLengths</span><span class="p">[</span><span class="n">num</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="c1"># 169, 363601, 1454 have length 3
+</span><span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">169</span><span class="p">,</span> <span class="mi">363601</span><span class="p">,</span> <span class="mi">1454</span><span class="p">]:</span>
+    <span class="n">chainLengths</span><span class="p">[</span><span class="n">num</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="c1"># Calculate length
+# of chains for everything less
+# than 1 million
+</span><span class="n">limit</span> <span class="o">=</span> <span class="mi">1000000</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
+    <span class="c1"># See if it's been calculated
+</span>    <span class="k">if</span> <span class="n">chainLengths</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="c1"># Calculate until we've reached a
+</span>    <span class="c1"># number that has been calculated...
+</span>    <span class="n">num</span> <span class="o">=</span> <span class="n">n</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">visited</span> <span class="o">=</span> <span class="p">[</span><span class="n">num</span><span class="p">]</span>
+    <span class="k">while</span> <span class="n">chainLengths</span><span class="p">[</span><span class="n">num</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="n">factorialDigitSum</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="n">visited</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="n">length</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="c1"># Now set the visited numbers...
+</span>    <span class="c1"># l is an offset.
+</span>    <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">visited</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">chainLengths</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span> <span class="o">+</span> <span class="n">chainLengths</span><span class="p">[</span><span class="n">num</span><span class="p">]</span>
+
+<span class="c1"># Count how many numbers have chain length 60
+</span><span class="n">countOfLength60</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">chainLengths</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">&lt;</span> <span class="n">limit</span> <span class="ow">and</span> <span class="n">length</span> <span class="o">==</span> <span class="mi">60</span><span class="p">:</span>
+        <span class="n">countOfLength60</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">countOfLength60</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>A 0 means the chain hasn’t been calculated yet. Running the code above results in,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>402
+3.9272377 seconds.
+</code></pre></div></div>
+
+<p>Thus, there are <strong>402</strong> terms with exactly sixty non-repeating terms in their chain. To confirm my suspicions about how many numbers we need to store, if we check how many keys are in the <code class="highlighter-rouge">chainLengths</code> dictionary, we see that there are 1000208, so we ended up storing an extra 208 numbers above our limit.</p>
+:ET

@@ -1,0 +1,39 @@
+I"	<h2 id="question">Question</h2>
+
+<p>If we list all the natural numbers below 10 that are multiples of 3  or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.</p>
+
+<p>Find the sum of all the multiples of 3 or 5 below 1000.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>Nothing fancy to do here. We can simply look through each natural number and add it to a rolling sum if it’s a multiple of 3 or 5:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">n</span>
+<span class="k">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running the code results in,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>233168
+0.00019780000000002573 seconds.
+</code></pre></div></div>
+
+<p>Therefore, <strong>233168</strong> is our answer to the first problem.</p>
+
+<h3 id="bonus">Bonus</h3>
+
+<p>We can solve this problem completely analytically. For example, \(\sum_{i=1}^{333}3i\) will get us all multiples of 3. We can do the same summation for 5. However, we have to be a bit careful. Adding these two summations will lead us to double count all numbers that are both multiples of 3 and 5 i.e. 15. Thus, we need to subtract these multiples. The full sum is therefore:</p>
+
+\[\begin{aligned}
+S &amp;= \sum_{i=1}^{333}3i + \sum_{i=1}^{199}5i - \sum_{i=1}^{66}15i
+\\
+&amp;= 3\left(\frac{333(334)}{2}\right) + 5\left(\frac{199(200)}{2}\right)-15\left(\frac{66(67)}{2}\right)
+\\ &amp;=
+3(55611) + 5(19900) - 15(2211)
+\\ &amp;=
+\boxed{233168}
+\end{aligned}\]
+:ET

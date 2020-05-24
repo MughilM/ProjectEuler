@@ -1,0 +1,67 @@
+I"c <h2 id="question">Question</h2>
+
+<p>If the numbers 1 to 5 are written out in words: one, two, three, four, five, then there are 3 + 3 + 5 + 4 + 4 = 19 letters used in total.</p>
+
+<p>If all the numbers from 1 to 1000 (one thousand) inclusive were written out in words, how many letters would be used?</p>
+
+<p><strong>NOTE</strong>: Do not count spaces or hyphens. For example, 342 (three hundred and forty-two) contains 23 letters and 115 (one hundred and fifteen) contains 20 letters. The use of “and” when writing out numbers is in compliance with British usage.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>A slightly different problem that doesn’t relate to math computation directly, but instead language. We need to break up this problem into cases, as all numbers from 1-19 follows no pattern. The tens also follow their own pattern. However, if the number is big enough, we can extract the hundreds place digit and recurse downwards. We can integer divide and do modular arithmetic to extract the digit and whatever is left over, respectively. The following recursive would return the number of letters for the numbers we care about (&lt; 1000).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">letter_count</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">ones</span> <span class="o">=</span> <span class="p">[</span><span class="s">'one'</span><span class="p">,</span> <span class="s">'two'</span><span class="p">,</span> <span class="s">'three'</span><span class="p">,</span> <span class="s">'four'</span><span class="p">,</span> <span class="s">'five'</span><span class="p">,</span>
+              <span class="s">'six'</span><span class="p">,</span> <span class="s">'seven'</span><span class="p">,</span> <span class="s">'eight'</span><span class="p">,</span> <span class="s">'nine'</span><span class="p">]</span>
+    <span class="n">teens</span> <span class="o">=</span> <span class="p">[</span><span class="s">'ten'</span><span class="p">,</span> <span class="s">'eleven'</span><span class="p">,</span> <span class="s">'twelve'</span><span class="p">,</span> <span class="s">'thirteen'</span><span class="p">,</span> <span class="s">'fourteen'</span><span class="p">,</span> <span class="s">'fifteen'</span><span class="p">,</span>
+             <span class="s">'sixteen'</span><span class="p">,</span> <span class="s">'seventeen'</span><span class="p">,</span> <span class="s">'eighteen'</span><span class="p">,</span> <span class="s">'nineteen'</span><span class="p">]</span>
+    <span class="n">tens</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="s">'twenty'</span><span class="p">,</span> <span class="s">'thirty'</span><span class="p">,</span> <span class="s">'forty'</span><span class="p">,</span> <span class="s">'fifty'</span><span class="p">,</span>
+            <span class="s">'sixty'</span><span class="p">,</span> <span class="s">'seventy'</span><span class="p">,</span> <span class="s">'eighty'</span><span class="p">,</span> <span class="s">'ninety'</span><span class="p">]</span>
+    <span class="c1"># Ultimate base case is if
+</span>    <span class="c1"># our number is 0. This means we've
+</span>    <span class="c1"># exhausted the digits
+</span>    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="c1"># Base case is if our number
+</span>    <span class="c1"># is less than 20. There is a separate
+</span>    <span class="c1"># word for each number from 1-19
+</span>    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">ones</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">teens</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">10</span><span class="p">])</span>
+    <span class="c1"># If we're between 20 and 100,
+</span>    <span class="c1"># then we need to extract the tens and
+</span>    <span class="c1"># the ones
+</span>    <span class="k">elif</span> <span class="mi">20</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">tens</span><span class="p">[</span><span class="n">n</span> <span class="o">//</span> <span class="mi">10</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">letter_count</span><span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="c1"># If we're at least one hundred, then extract
+</span>    <span class="c1"># the hundred's place and call the count again.
+</span>    <span class="k">else</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ones</span><span class="p">[</span><span class="n">n</span> <span class="o">//</span> <span class="mi">100</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="s">'hundred'</span><span class="p">)</span>
+        <span class="c1"># If we're a multiple of hundred, then we
+</span>        <span class="c1"># don't need the "and".
+</span>        <span class="c1"># Otherwise, add 3 to the length for "and" and
+</span>        <span class="c1"># recurse.
+</span>        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">total</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">letter_count</span><span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">total</span>
+</code></pre></div></div>
+
+<p>Now, we can iterate through each number, and add the letters for “one thousand” at the end.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">):</span>
+    <span class="n">total</span> <span class="o">+=</span> <span class="n">letter_count</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">total</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="s">'one'</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="s">'thousand'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">total</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running the above gives an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>21124
+0.002460049382716049 seconds.
+</code></pre></div></div>
+
+<p>Thus, <strong>21124</strong> is our answer.</p>
+:ET

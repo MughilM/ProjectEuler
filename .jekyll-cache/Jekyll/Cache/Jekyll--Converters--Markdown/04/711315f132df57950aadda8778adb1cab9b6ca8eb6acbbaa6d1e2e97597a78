@@ -1,0 +1,78 @@
+I"O<h2 id="question">Question</h2>
+
+<p>The following iterative sequence is defined for the set of positive integers:</p>
+
+\[n = \begin{cases}
+	\frac{n}{2},\quad &amp;n\text{ is even}
+	\\
+	3n + 1, \quad &amp;n\text{ is odd}
+\end{cases}\]
+
+<p>Using the rule above and starting with 13, we generate the following sequence</p>
+
+\[13 \rightarrow 40 \rightarrow 20 \rightarrow 10 \rightarrow 5 \rightarrow 16 \rightarrow 8 \rightarrow 4 \rightarrow 2 \rightarrow 1\]
+
+<p>It can be seen that this sequence (starting at 13 and finishing at 1) contains 10 terms. Although it has not been proved yet (Collatz Problem), it is thought that all starting numbers finish at 1.</p>
+
+<p>Which starting number, under one million, produces the longest chain?</p>
+
+<p><strong>NOTE</strong>: Once the chain starts, the terms are allowed to go over one million.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>So, it is unfeasible to go through every number and wait until we get to 1, especially if the longest sequence is unreasonably long. We can be a bit smarter about it. For example, in the above example sequence (starting at 13), we can place 26 at the start of the sequence, and have it still be valid (half of 26 is 13). Since we know the sequence starting at 13 has 10 terms, the sequence starting at 26 must have <strong>11</strong> terms.</p>
+
+<p>In terms of code, we can keep a dictionary whose keys are the starting numbers, and whose values are the lengths of the sequence. By definition, the sequence starting at has 1 term (technically, it’s a cycle going 1, 4, 2, 1, 4, 2, …). The reason that I’m using a dictionary is because I do not know the maximum number that might be reached during a sequence. It might unreasonably high, and having a simple list that many elements long will surely take up much more space than a dictionary at intermediate values. We can use <code class="highlighter-rouge">defaultdict</code> from the <code class="highlighter-rouge">collections</code> package to initialize our values to 0 automatically.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">limit</span> <span class="o">=</span> <span class="mi">1000000</span>
+<span class="n">seqLengths</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="c1"># Starting at 1 has 1 term
+</span><span class="n">seqLengths</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="c1"># Go through each starting number until
+# the limit.
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">limit</span><span class="p">):</span>
+    <span class="c1"># If the number is 0, then we
+</span>    <span class="c1"># haven't calculated it yet.
+</span>    <span class="k">if</span> <span class="n">seqLengths</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Apply the rule
+</span>        <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c1"># Keep a list of numbers visited.
+</span>        <span class="n">numVisited</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+        <span class="c1"># While we haven't reached a number
+</span>        <span class="c1"># that has been calculated...
+</span>        <span class="k">while</span> <span class="n">seqLengths</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Repeatedly apply rule...
+</span>            <span class="k">if</span> <span class="n">j</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">j</span> <span class="o">//=</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">j</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">numVisited</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+        <span class="c1"># Once we've reached a value that
+</span>        <span class="c1"># has been calculated, set all the
+</span>        <span class="c1"># numbers we've visited with the right
+</span>        <span class="c1"># value
+</span>        <span class="n">val</span> <span class="o">=</span> <span class="n">seqLengths</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="c1"># Reverse the visited list,
+</span>        <span class="c1"># and set all of them, adding 1
+</span>        <span class="c1"># as we go.
+</span>        <span class="n">numVisited</span> <span class="o">=</span> <span class="n">numVisited</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">numVisited</span><span class="p">:</span>
+            <span class="n">seqLengths</span><span class="p">[</span><span class="n">num</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="n">val</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="c1"># We're done calculating,
+# now find the max value.
+</span><span class="k">print</span><span class="p">(</span><span class="nb">max</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">seqLengths</span><span class="p">.</span><span class="n">items</span><span class="p">()],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</code></pre></div></div>
+
+<p>Running the above results in,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(837799, 525)
+3.123749135802469 seconds.
+</code></pre></div></div>
+
+<p>Therefore, the number with the longest sequence is <strong>837799</strong>, with a grand total of 525 elements.</p>
+:ET

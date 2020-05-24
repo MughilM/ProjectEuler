@@ -1,0 +1,31 @@
+I"™<h2 id="question">Question</h2>
+
+<p>The prime factors of 13195 are 5, 7, 13 and 29.</p>
+
+<p>What is the largest prime factor of the number 600851475143?</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>Now, there are a lot of complicated algorithms out there that can quickly prime factorize composite numbers. However, for the purposes of this problem, the number is not extremely large. Therefore, we can take a simple approach. There is a Python package known as <code class="highlighter-rouge">primesieve</code> that can handle finding prime numbers themselves. Documentation is listed <a href="https://pypi.org/project/primesieve/">here</a>.</p>
+
+<p>The upper bound for the largest prime factor of a number $n$ is in fact $\sqrt{n}$. Using <code class="highlighter-rouge">primesieve</code> we can quickly generate prime factors and check the largest one on down:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">primesieve</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">600851475143</span>
+<span class="n">primesToCheck</span> <span class="o">=</span> <span class="n">primesieve</span><span class="p">.</span><span class="n">primes</span><span class="p">(</span><span class="n">n</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">prime</span> <span class="ow">in</span> <span class="n">primesToCheck</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="n">prime</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">prime</span><span class="p">)</span>
+        <span class="k">break</span>
+</code></pre></div></div>
+
+<p>Running this code gives us</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>6857
+0.01296553086419753 seconds.
+</code></pre></div></div>
+
+<p>Thus, <strong>6857</strong> is our answer.</p>
+:ET

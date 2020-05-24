@@ -1,0 +1,48 @@
+I"¼<h2 id="question">Question</h2>
+
+<p>A perfect number is a number for which the sum of its proper divisors is exactly equal to the number. For example, the sum of the proper divisors of 28 would be 1 + 2 + 4 + 7 + 14 = 28, which means that 28 is a perfect number.</p>
+
+<p>A number \(n\) is called deficient if the sum of its proper divisors if less than \(n\) and it is called abundant if this sum exceeds \(n\).</p>
+
+<p>As 12 is the smallest abundant number, 1 + 2 + 3 + 4 + 6 = 16, the smallest number that can be written as the sum of two abundant numbers is 24. By mathematical analysis, it can be shown that all integers greater than 28123 can be written as the sum of two abundant numbers. However, this upper limit cannot be reduced any further by analysis even though it is known that the greatest number that cannot be expressed as the sum of two abundant numbers is less than this limit.</p>
+
+<p>Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>Would you look at that. Looks like we can use the \(d(n)\) method we developed in <a href="/ProjectEuler/ProjectEuler/Problem-21-Amicable-numbers/">Problem 21</a>. Please refer to that problem listing to see how we found the sum of proper divisors. This time we have to go up to 28123. Afterwards, we must grab all numbers which turn out to be abundant. In this case, it is easier to see what numbers CAN be written as the sum of two abundant numbers.</p>
+
+<p>Since the list is sorted, we can run a double for loop that goes through each pair of numbers. We can break out of the inner loop once we reach a sum bigger than 28123 to save some time. Once we have the numbers, we can sum these up, and subtract it from the sum of all numbers from 1 to 28123, which recall has a closed-from formula of \(\frac{n(n+1)}{2}\).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">limit</span> <span class="o">=</span> <span class="mi">28123</span>
+<span class="n">primes</span> <span class="o">=</span> <span class="n">primesieve</span><span class="p">.</span><span class="n">primes</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+<span class="n">Ds</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">primes</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">limit</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">d</span><span class="p">]</span>
+
+<span class="c1"># Go through and remove all numbers which aren't
+# abundant.
+</span><span class="n">abundantNums</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Ds</span><span class="p">)</span> <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">]</span>
+
+<span class="c1"># Find all numbers which can be written
+</span><span class="n">sums</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">abundantNums</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">abundantNums</span><span class="p">)):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">abundantNums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">abundantNums</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="c1"># Break out if s &gt; 28123
+</span>        <span class="k">if</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="c1"># Add the sum to the list
+</span>        <span class="n">sums</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="c1"># We can subtract the sum of all
+# numbers from 1 to 28123 from the sum
+# of this set...
+</span><span class="k">print</span><span class="p">(</span><span class="n">limit</span> <span class="o">*</span> <span class="p">(</span><span class="n">limit</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sums</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Notice we use <code class="highlighter-rouge">set()</code> to store the sums. This is because we might encounter numbers which have two separate sums. We only want to count each number once. Running the code above results in an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>4179871
+5.774933205017436 seconds.
+</code></pre></div></div>
+
+<p>Thus, <strong>4179871</strong> is the sum of all positive integers which canâ€™t be written as the sum of two abundant numbers. The time is a bit slow, but still satisfactorily within the limit of one minute.</p>
+:ET

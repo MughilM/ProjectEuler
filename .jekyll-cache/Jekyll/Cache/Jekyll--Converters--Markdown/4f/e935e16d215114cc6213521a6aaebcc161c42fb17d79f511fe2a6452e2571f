@@ -1,0 +1,64 @@
+I"<h2 id="question">Question</h2>
+
+<p>If we take 47, reverse and add, 47 + 74 = 121, which is palindromic.</p>
+
+<p>Not all numbers produce palindromes so quickly. For example,</p>
+
+<p>[\begin{aligned}
+349+943 &amp;= 1292
+<br />
+1292+2921 &amp;= 4213
+<br />
+4213+3124 &amp;= 7337
+\end{aligned}]</p>
+
+<p>That is, 349 took three iterations to arrive at a palindrome.</p>
+
+<p>Although no one has proved it yet, it is thought that some numbers, like 196, never produce a palindrome. A number that never forms a palindrome through the reverse and add process is called a Lychrel number. Due to the theoretical nature of these numbers, and for the purpose of this problem, we shall assume that a number is Lychrel until proven otherwise. In addition you are given that for every number below ten-thousand, it will either (i) become a palindrome in less than fifty iterations, or, (ii) no one, with all the computing power that exists, has managed so far to map it to a palindrome. In fact, 10677 is the first number to be shown to require over fifty iterations before producing a palindrome: 4668731596684224866951378664 (53 iterations, 28-digits).</p>
+
+<p>Surprisingly, there are palindromic numbers that are themselves Lychrel numbers; the first example is 4994.</p>
+
+<p>How many Lychrel numbers are there below ten-thousand?</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>This is a pretty straightforward problem. Since the bound is relatively low, we can do this directly. We keep adding the reverse of the number until a palindrome is reached. We keep track of the number of iterations. If we pass 50, then we break immediately, and add to the count, and continue to the next number. Like this, we loop through all integers below ten-thousand.</p>
+
+<p>The <code class="highlighter-rouge">isPalindrome</code> function is very basic, as it checks if it’s equal to the reverse of the integer. To make things slightly faster, I explicitly check one-digit and two-digit numbers. All one-digit numbers are palindromes, and a two-digit number is a palindrome if it’s divisible by 11.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">isPalindrome</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="c1"># One digit number are
+</span>    <span class="c1"># automatically palindromes.
+</span>    <span class="c1"># If it's two digits, then it
+</span>    <span class="c1"># should be divisible by 11.
+</span>    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="ow">or</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">11</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">n</span> <span class="o">==</span> <span class="n">n</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">isLychrel</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10001</span><span class="p">):</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">iters</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="c1"># Keep going until iterations are more than 50
+</span>    <span class="k">while</span> <span class="n">iters</span> <span class="o">&lt;=</span> <span class="mi">50</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">isPalindrome</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">iters</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="c1"># If the first condition failed,
+</span>    <span class="c1"># then we have 51 iterations....
+</span>    <span class="k">if</span> <span class="n">iters</span> <span class="o">==</span> <span class="mi">51</span><span class="p">:</span>
+        <span class="n">isLychrel</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\r</span><span class="s">'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="s">' / 10000 numbers finished.'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+<span class="k">print</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">isLychrel</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running the code results in an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>10000 / 10000 numbers finished.
+249
+1.2541913069861503 seconds.
+</code></pre></div></div>
+
+<p>Thus, there are <strong>249</strong> Lychrel numbers below ten-thousand.</p>
+:ET

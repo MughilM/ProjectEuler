@@ -1,0 +1,36 @@
+I"-<h2 id="question">Question</h2>
+
+<p>Comparing the two numbres written in index form like \(2^{11}\) and \(3^7\) is not difficult, as any calculator would confirm that \(2^{11}=2048&lt;3^7=2187\).</p>
+
+<p>However, confirming that \(632382^{518061}&gt;519432^{525806}\) would be much more difficult, as both numbers contain over three million digits.</p>
+
+<p>Using <a href="https://projecteuler.net/project/resources/p099_base_exp.txt">base_exp.txt</a> (right click and ‘Save Link/Target As…’), a 22K text file containing one thousand lines with a base/exponent pair on each line, determine which line number has the greatest numerical value.</p>
+
+<p>NOTE: The first two lines in the file represent the numbers in the example given above.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>Of course, even Python can’t handle that many ridiculous computations very quickly. We need a way to decrease the size of our computations.</p>
+
+<p>One really good way is that we can take the <strong>logarithm</strong> of both sides. If a function is always increasing or always decreasing, as exponentials are, then taking the algorithm will <strong>always</strong> preserve that property. So if beforehand, \(a^b&gt;c^d\), then \(\log a^b &gt; \log c^d\). However, we can use an additional property of bringing down that power in the front: \(b\log a&gt;d\log c\). <strong>This is how we can decrease the size of our computations!</strong></p>
+
+<p>Additionally, the <strong>base</strong> of the logarithm does <strong>not</strong> matter. This will work no matter the base. Below  the code uses the <code class="highlighter-rouge">numpy</code> package to calculate \(b\log a\) for all of our pairs in a single line. The function <code class="highlighter-rouge">np.argmax</code> will get the index of the maximum value. Of course, we’ll have to add one since these indices are zero-indexed.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">exponents</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">genfromtxt</span><span class="p">(</span>
+    <span class="s">'p099_base_exp.txt'</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">','</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">int64</span><span class="p">)</span>
+<span class="n">logs</span> <span class="o">=</span> <span class="n">exponents</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">log10</span><span class="p">(</span><span class="n">exponents</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="c1"># Now find the maximum argument and print its line
+</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logs</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">exponents</span><span class="p">[</span><span class="n">index</span><span class="p">].</span><span class="n">tolist</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p>Running this short code results in an output,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>709
+[895447 504922]
+0.011759600000000037 seconds.
+</code></pre></div></div>
+
+<p>Thus, \(895447^{504922}\) is the largest number in our list, and it happens at line <strong>709</strong>.</p>
+:ET

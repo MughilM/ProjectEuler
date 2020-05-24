@@ -1,0 +1,92 @@
+I"|&<h2 id="question">Question</h2>
+
+<p>A unit fraction contains 1 in the numerator. The decimal representation of the unit fractions with denominators 2 to 10 are given:</p>
+
+<p>[\begin{aligned}
+\frac{1}{2} &amp;= 0.5 <br />
+\frac{1}{3} &amp;= 0.\overline{3} <br />
+\frac{1}{4} &amp;= 0.25 <br />
+\frac{1}{5} &amp;= 0.2 <br />
+\frac{1}{6} &amp;= 0.1\overline{6} <br />
+\frac{1}{7} &amp;= 0.\overline{142857} <br />
+\frac{1}{8} &amp;= 0.125 <br />
+\frac{1}{9} &amp;= 0.\overline{1} <br />
+\frac{1}{10} &amp;= 0.1
+\end{aligned}]</p>
+
+<p>where \(0.1\overline{6}\) means 0.166666…, and has a 1-digit recurring cycle. It can be seen that \(\frac{1}{7}\) has a 6-digit recurring cycle.</p>
+
+<p>Find the value of \(d&lt;1000\) for which \(\frac{1}{d}\) contains the longest recurring cycle in its decimal fraction part.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>Ok, so there are definitely algorithms present to determine if a cycle is present in a string of letters/digits. However, the only upper bound we have is that the recurring cycle has to be at most \(d-1\), which means we have at least generate at least twice that many digits to notice a cycle. Doing that manually will be difficult, and with the accuracy of floating-point precision makes it unreliable to simply divide. So is there a way to find the length of the recurring cycle just from \(d\)?</p>
+
+<p>There is. <a href="https://www.quora.com/What-determines-the-number-of-digits-for-recurring-decimals">This answer on Quora</a> and the <a href="https://en.wikipedia.org/wiki/Repeating_decimal">Wikipedia</a> article on the subject gives us insight to how we can determine the denominator with the longest recurring cycle. Essentially, given our fraction \(\frac{1}{d}\), we keep multiplying this fraction by 10 until \(gcd(10,d) = 1\). We also need to keep reducing the fraction to lowest terms each time. The Quora answer then explains that since we kept multiplying by 10 (moving the decimal point), eventually the original fraction and the multiplied fraction should have the same decimal repeating cycle after \(k\) steps. This \(k\) value is given by the least \(k\) that satisfies \(10^k\equiv1\mod d\). Notice that \(k\) must be positive, as it doesn’t make sense for a decimal to have a 0-digit recurring cycle. Let’s show an example with \(\displaystyle \frac{1}{55}\).</p>
+
+<p>First, observe that \(gcd(10, 55) = 5\neq 1\). Thus, multiply the fraction to get \(\displaystyle \frac{10}{55} = \frac{2}{11}\). Now \(gcd(10,11) = 1\), and we can move to the next step. Now, we are looking for the least \(k\) that satisfies \(10^k\equiv 1\mod 11\).</p>
+
+<p>[\begin{aligned}
+10^1 &amp;\equiv 10\mod 11 = 10 <br />
+10^2 &amp;\equiv 100\mod 11 = 1
+\end{aligned}]</p>
+
+<p>Therefore, \(k = 2\) and we conclude that \(\displaystyle \frac{1}{55}\) has a 2-digit recurring cycle, and indeed it does as the decimal expansion is \(0.0\overline{18}\). Notice that the numerator itself did not matter, as any fraction in its reduced form with a denominator of 55 will have a 2-digit recurring cycle.</p>
+
+<p>What if after multiplying by 10’s until the condition results in \(d = 1\)? This just means that the decimal will not repeat, as the denominator only consisted of 2’s and 5’s. All fractions whose denominators with only these two prime factors will eventually terminate. This is partly due to the fact that \(\frac{1}{2}\) and \(\frac{1}{5}\) are the only fractions with prime denominators that don’t repeat.</p>
+
+<p>Which brings me to the Wikipedia article. The article states a prime denominator \(p\) will have a recurring cycle length of \(p-1\) <em>unless</em> the number 10 is a so-called multiplicative root of \(p\), in which case the length will be something smaller. For the purposes of this problem, this extra check is not necessary, and may actually involve additional computations. However, due to this fact, all we need to do check the prime numbers under 1000! A great excuse to use <code class="highlighter-rouge">primesieve</code> :). Finally, to efficiently find the greatest common divisor, we can use the <a href="https://en.wikipedia.org/wiki/Euclidean_algorithm">Euclidean algorithm</a>, where we decrement the larger value by the smaller value, until one is 0. At that point, the non-zero value is the greatest common divisor.</p>
+
+<p>So in the end, we test using the procedure above with all of the prime numbers less than 1000. The code for this, along with calculating GCD is,</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">euclidGCD</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">b</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">euclidGCD</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">euclidGCD</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span><span class="o">//</span><span class="n">b</span><span class="p">),</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="n">maxK</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">maxN</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">primesieve</span><span class="p">.</span><span class="n">primes</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">numerator</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="n">n</span>
+    <span class="c1"># While the gcd of the denominator
+</span>    <span class="c1"># and 10 isn't 1...keep multiplying
+</span>    <span class="c1"># by 10.
+</span>    <span class="k">while</span> <span class="n">euclidGCD</span><span class="p">(</span><span class="n">denominator</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Multiply numerator by 10,
+</span>        <span class="c1"># and reduce.
+</span>        <span class="n">numerator</span> <span class="o">*=</span> <span class="mi">10</span>
+        <span class="n">gcd</span> <span class="o">=</span> <span class="n">euclidGCD</span><span class="p">(</span><span class="n">numerator</span><span class="p">,</span> <span class="n">denominator</span><span class="p">)</span>
+        <span class="n">numerator</span> <span class="o">//=</span> <span class="n">gcd</span>
+        <span class="n">denominator</span> <span class="o">//=</span> <span class="n">gcd</span>
+    <span class="c1"># If we ever encounter a denominator
+</span>    <span class="c1"># of 1, that means the decimal doesn't
+</span>    <span class="c1"># repeat, and we can skip this. Fun Fact,
+</span>    <span class="c1"># this happens with numbers with only
+</span>    <span class="c1"># 2 and 5 as their prime factors.
+</span>    <span class="k">if</span> <span class="n">denominator</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="c1"># Once 10 is co-prime, find when
+</span>    <span class="c1"># 10^k mod denominator is 1.
+</span>    <span class="c1"># This k is the length of the recurrence.
+</span>    <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="n">k</span><span class="p">)</span> <span class="o">%</span> <span class="n">denominator</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="c1"># Update if it's the biggest we found.
+</span>    <span class="k">if</span> <span class="n">maxK</span> <span class="o">&lt;</span> <span class="n">k</span><span class="p">:</span>
+        <span class="n">maxK</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="n">maxN</span> <span class="o">=</span> <span class="n">n</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'d ='</span><span class="p">,</span> <span class="n">maxN</span><span class="p">,</span> <span class="s">'with'</span><span class="p">,</span> <span class="n">maxK</span><span class="p">,</span> <span class="s">'recurring digits.'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Notice the GCD method is a relatively simple recursion. The recursion is made faster by guaranteeing one value will be lower than the error. This results in the recursion depth being as small as possible. Running the code above results in an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d = 983 with 982 recurring digits.
+0.08353135778999571 seconds.
+</code></pre></div></div>
+
+<p>Thus, \(\displaystyle \frac{1}{983}\) has the longest recurring decimal cycle at 982 digits. I really like this problem because two seemingly unrelated concepts (prime numbers and decimal recurrence) come together to solve this problem.</p>
+:ET

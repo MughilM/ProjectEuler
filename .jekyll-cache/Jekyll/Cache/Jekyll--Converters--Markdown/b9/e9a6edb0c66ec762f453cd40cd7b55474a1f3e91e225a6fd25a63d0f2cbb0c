@@ -1,0 +1,76 @@
+I" <h2 id="question">Question</h2>
+
+<p>The minimal path sum in the 5 by 5 matrix below, by starting in any cell in the left column and finishing in any cell in the right column, and only moving up, down, and right, is indicated in red and bold; the sum is equal to 994.</p>
+
+<p>[\begin{pmatrix}
+	131 &amp; 673 &amp; \color{red}{\mathbf{234}} &amp; \color{red}{\mathbf{103}} &amp; \color{red}{\mathbf{18}}
+	<br />
+	\color{red}{\mathbf{201}} &amp; \color{red}{\mathbf{96}} &amp; 
+		\color{red}{\mathbf{342}} &amp; 965 &amp; 150
+	<br />
+	630 &amp; 803 &amp; 746 &amp; 422 &amp; 111
+	<br />
+	537 &amp; 699 &amp; 497 &amp; 121 &amp; 956
+	<br />
+	805 &amp; 732 &amp; 524 &amp; 37 &amp; 331
+\end{pmatrix}]</p>
+
+<p>Find the minimal path sum from the left column to the right column in <a href="https://projecteuler.net/project/resources/p082_matrix.txt">matrix.txt</a> (right click and “Save Link/Target As…”), a 31K text file containing an 80 by 80 matrix.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>This is a proper step up from Problem 81, where we only had 2 directions to worry about. However, we can still adapt the same method of updating the minimum sum as we go along, albeit a bit more complicated.</p>
+
+<p>In the previous problem, we realized that in each cell, the minimum path to the cell can <strong>only</strong> come from above or from the left. Here, <strong>it can also come from below</strong>.</p>
+
+<p>Since we’re going from column to column, we would update the cells in each column to reflect the minimum cell ending <strong>in that cell</strong>, originating from <strong>any cell in the leftmost column</strong>. Then, when we reach the second to last column, we just add the rightmost column directly, and take the minimum sum.</p>
+
+<p>To figure out how to compute the minimum sums in a column, given the sums in the previous column, the following graphic would help, with the “803” in the 2nd column as an example:</p>
+
+<p><img src="http://localhost:4000/ProjectEuler\assets\Images\p082.png" alt="sumImage" /></p>
+
+<p>You can see that for the “803” cell, we need to calculate the sums of 5 possible paths. Above, the orange path sum totaling 1100 is the least, and so we save that number in our sum matrix. We then repeat this process for each cell in the column.</p>
+
+<p>Because we are taking into account an extra direction, we are spending a quadratic amount of time in each column. This coupled with having $n$ columns, leads to a cubic algorithm. Not the best, but much better than brute force.</p>
+
+<p>In terms of code, I utilize the <code class="highlighter-rouge">np.cumsum</code> method to quickly calculate those vertical sums. Otherwise, it’s a straightforward double for loop.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">'./p082_matrix.txt'</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">'int32'</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">','</span><span class="p">)</span>
+
+<span class="c1"># We start on the second column and find the minimum
+# sum going from any cell in the previous column to
+# that cell. We keep doing this for each column,
+# and finally simply add the number directly to
+# the right for the second to last column and take the min.
+</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">matrix</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">minSums</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">matrix</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s">'int32'</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">matrix</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="c1"># Find min of all possible sums coming from the previous column
+</span>        <span class="c1"># When we come from the bottom (matrix[:i+1,j]) we need to reverse the array...
+</span>        <span class="n">minSums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">min</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">matrix</span><span class="p">[:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">matrix</span><span class="p">[:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                                         <span class="n">np</span><span class="p">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">:,</span> <span class="n">j</span><span class="p">])</span> <span class="o">+</span> <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">:,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="n">matrix</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">minSums</span>
+<span class="c1"># Now just add the last two columns together and take
+# the minimum
+</span><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">min</span><span class="p">(</span><span class="n">matrix</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">matrix</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="s">'seconds.'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running this code results in an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>260324
+0.6649046999999999 seconds.
+</code></pre></div></div>
+
+<p>And so, our minimum sum from the left column to the right column is <strong>260324</strong>.</p>
+:ET

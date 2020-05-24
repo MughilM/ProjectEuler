@@ -1,0 +1,91 @@
+I"D <h2 id="question">Question</h2>
+
+<p>In the 5 by 5 matrix below, the minimal path sum from the top left to the bottom right, by <strong>only moving to the right and down</strong>, is indicated in bold red and is equal to 2427.</p>
+
+\[\begin{pmatrix}
+	\color{red}{\mathbf{131}} &amp; 673 &amp; 234 &amp; 103 &amp; 18
+	\\
+	\color{red}{\mathbf{201}} &amp; \color{red}{\mathbf{96}} &amp; 
+		\color{red}{\mathbf{342}} &amp; 965 &amp; 150
+	\\
+	630 &amp; 803 &amp; \color{red}{\mathbf{746}} &amp; \color{red}{\mathbf{422}} &amp; 111
+	\\
+	537 &amp; 699 &amp; 497 &amp; \color{red}{\mathbf{121}} &amp; 956
+	\\
+	805 &amp; 732 &amp; 524 &amp; \color{red}{\mathbf{37}} &amp; \color{red}{\mathbf{331}}
+\end{pmatrix}\]
+
+<p>Find the minimal path sum from the top left to the bottom right by only moving right and down in <a href="https://projecteuler.net/project/resources/p081_matrix.txt">matrix.txt</a> (right click and “Save Link/Target As…”), a 31K text file containing an 80 by 80 matrix.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>From the looks of things, it appears that it is not a good idea to brute force every single path in the giant matrix. Is there a faster method?</p>
+
+<p>Well, notice that addition is like one-way street. Once you add something, it will always get bigger (we’re only dealing with positive numbers). We can then save the <strong>minimum path sum</strong> for <em>any</em> path ending in a cell by comparing adding the number to its right and below it. If that’s confusing, I’ll show an example using a smaller matrix. Suppose our matrix \(M\) is just the top 3 by 3 corner of the example:</p>
+
+\[M = \begin{pmatrix}
+	131 &amp; 673 &amp; 234
+	\\
+	201 &amp; 96 &amp; 342
+	\\
+	630 &amp; 803 &amp; 746
+\end{pmatrix}\]
+
+<p>We will also have a new matrix \(P\), where each element \(p_{ij}\) is the minimum path sum of all paths in \(M\) ending at the cell in row \(i\) and column \(j\). Hopefully, you can easily see that the top corner of both matrices will be the same i.e. \(p_{ij} = m_{ij}\). Since we can only move right or down, the only paths that end in the top row, are the ones that consistently move across. Thus,</p>
+
+\[\begin{aligned}
+	p_{12} &amp;= m_{11} + m_{12} = 131 + 673 = 804
+	\\
+	p_{13} &amp;= m_{11} + m_{12} + m_{13} = 131 + 673 + 234 = 1038
+\end{aligned}\]
+
+<p>Similarly, we can make the same deduction about the first column of \(P\). So from the start, we can initialize our \(P\) matrix as so:</p>
+
+\[P = \begin{pmatrix}
+	131 &amp; 804 &amp; 1038 \\
+	332 &amp; * &amp; * \\
+	962 &amp; * &amp; *
+\end{pmatrix}\]
+
+<p>I’ve put stars in the places where we haven’t calculated the minimum path sum yet. Now then, what is \(p_{22}\), that is, the minimum path sum for all paths ending in the middle cell? Well, since all paths only travel right or down, <strong>all paths ending in the middle cell had to have come from the cell above or the cell to the left</strong>. But wait, we already calculated the minimum path sums for those cells! In that case, we just need add those cells (\(p_{12}\) and \(p_{21}\)) to \(m_{22}\) (96), and save whichever is smaller! In this case, \(332+96&lt;804+96\), so \(p_{22} = 332+96 = 428\). In general,</p>
+
+\[p_{ij} = \min\begin{cases}p_{i-1,j}+m_{ij} \\ p_{i,j-1}+m_{ij}\end{cases}\]
+
+<p>Following this rule, we can quickly fill in \(P\):</p>
+
+\[P = \begin{pmatrix}
+	131 &amp; 804 &amp; 1038 \\
+	332 &amp; 428 &amp; 770 \\
+	962 &amp; 1231 &amp; 1516
+\end{pmatrix}\]
+
+<p>The question asks for the minimum path sum ending in the bottom corner. Well, this is just the value in the bottom corner of \(P\). Notice, we are not saving the actual path as we go along. We could if we want to, by signaling which term was saved, but that is not needed in this problem.</p>
+
+<p>When coding the solution, I was overwriting the original array itself, since we visit each cell only once and don’t need that cell’s value anymore. A single double for loop does the job, after we’ve initialized the first row and column.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'p081_matrix.txt'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">matrix</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">line</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">','</span><span class="p">)))</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">().</span><span class="n">splitlines</span><span class="p">()]</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="c1"># First fill in cumulative sums on first row
+# and first column
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">matrix</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># Now update all the cells with the minimum sum
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
+        <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">min</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>Running this results in an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>427337
+0.005567600000000006 seconds.
+</code></pre></div></div>
+
+<p>Thus, the minimum path sum in our 80 by 80 matrix is <strong>427337</strong>.</p>
+:ET

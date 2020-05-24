@@ -1,0 +1,27 @@
+I"�<h2 id="question">Question</h2>
+
+<p>By starting at the top of the triangle below and moving to adjacent numbers on the row below, the maximum total from top to bottom is 23.</p>
+
+<pre style="text-align:center">
+<span style="color:red"><b>3</b></span>
+<span style="color:red"><b>7</b></span> 4
+2 <span style="color:red"><b>4</b></span> 6
+8 5 <span style="color:red"><b>9</b></span> 3
+</pre>
+
+<p>That is, 3 + 7 + 4 + 9 = 23.</p>
+
+<p>Find the maximum total from top to bottom in <a href="https://projecteuler.net/project/resources/p067_triangle.txt">triangle.txt</a> (right click and ‘Save Link/Target As…’) a 15K text file containing a triangle with one-hundred rows.</p>
+
+<p><strong>NOTE</strong>: This is a much more difficult version of <a href="/ProjectEuler/ProjectEuler/Problem-18-Maximum-path-sum-I/">Problem 18</a>. It is not possible to try every route to solve this problem, as there are \(2^{99}\) altogether! If you could check one trillion \(\left(10^{12}\right)\) routes every second it would take over twenty billion years to check them all. There is an efficient algorithm to solve it ;o)</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>My answer to <a href="/ProjectEuler/ProjectEuler/Problem-18-Maximum-path-sum-I/">Problem 18</a> has the efficient algorithm in question, as there was a warning for this problem. Please see the answer to that problem for the algorithm. After replacing the file in the code and running it again, we get an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7273
+0.004878615356596403 seconds.
+</code></pre></div></div>
+
+<p>Thus, the max total from top to bottom is <strong>7273</strong>.</p>
+:ET

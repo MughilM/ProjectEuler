@@ -1,0 +1,64 @@
+I"�!<h2 id="question">Question</h2>
+
+<p>A common security method used for online banking is to ask the user for three random characters from a passcode. For example, if the passcode was 531278, they may ask for the 2nd, 3rd, and 5th characters; the expected reply would be: 317.</p>
+
+<p>The text file, <a href="https://projecteuler.net/project/resources/p079_keylog.txt">keylog.txt</a>, contains fifty successful login attempts.</p>
+
+<p>Given that the three characters are always asked for in order, analyze the file so as to determine the shortest possible secret passcode of unknown length.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>A different sort of problem this time with the password breaking. In hindsight, I felt that this problem could actually be solved by hand, by looking at the login attempts. One thing that might jump out to you is that if there’s a 7 in the login attempt, it’s <em>always</em> at the beginning. Similarly, if there’s a 0 in the login, it’s <em>always</em> at the end. These two facts immediately imply that the passcode starts and ends with a 7 and a 0 respectively.</p>
+
+<p>With these observations as to what numbers appear before and after others, you could easily decode what the passcode should be. However, I still wanted to see if I can code this up.</p>
+
+<p>Some assumptions. Since we are looking for the shortest possible keycode, and no digit appears twice within each login attempt, each digit appears only once in the full passcode. Additionally, there should be no 4s or 5s in the passcode, since no login attempt had one.</p>
+
+<p>In terms of how we store which digits before and after each digit, we can keep a dictionary, which maps each digit to a 2-tuple of lists. The first holds the possible digits that can come before, and the second holds those that can come after.</p>
+
+<p>In order to build the full passcode, we see which digit has <strong>no</strong> possible digits that come before it. After we’ve selected it, we remove that number from all other instances. We then repeat this process. The string we have in the end is the full passcode.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Set a bunch of rules, like digit x must come before y.
+</span><span class="n">rules</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">digit</span><span class="p">):</span> <span class="p">(</span><span class="nb">set</span><span class="p">(),</span> <span class="nb">set</span><span class="p">())</span> <span class="k">for</span> <span class="n">digit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="k">if</span> <span class="n">digit</span> <span class="o">!=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">digit</span> <span class="o">!=</span> <span class="mi">5</span><span class="p">}</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">'./p079_keylog.txt'</span><span class="p">,</span> <span class="s">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">keylogs</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="n">read</span><span class="p">().</span><span class="n">splitlines</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">keylogs</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">log</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">rules</span><span class="p">[</span><span class="n">log</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="mi">1</span><span class="p">].</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">log</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">rules</span><span class="p">[</span><span class="n">log</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="mi">0</span><span class="p">].</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rules</span><span class="p">[</span><span class="n">log</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="mi">0</span><span class="p">].</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">rules</span><span class="p">[</span><span class="n">log</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="mi">1</span><span class="p">].</span><span class="n">add</span><span class="p">(</span><span class="n">log</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+<span class="c1"># Now we see which digit has nothing
+# come before it. Once we've found it,
+# we remove that from all other lists,
+# and perform the search again...
+</span><span class="n">password</span> <span class="o">=</span> <span class="s">''</span>
+<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">password</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span>
+    <span class="n">nextDigit</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">nextDigit</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="k">break</span>
+    <span class="n">password</span> <span class="o">+=</span> <span class="n">nextDigit</span>
+    <span class="k">del</span> <span class="n">rules</span><span class="p">[</span><span class="n">nextDigit</span><span class="p">]</span>
+    <span class="c1"># Remove it from the rest...
+</span>    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">nextDigit</span> <span class="ow">in</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">remove</span><span class="p">(</span><span class="n">nextDigit</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'The password is'</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running the above code results in,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The password is 73162890
+0.0008719999999999839 seconds.
+</code></pre></div></div>
+
+<p>Thus, our full password is <strong>73162890</strong>. Notice there are no 4s or 5s in this passcode.</p>
+:ET

@@ -1,0 +1,103 @@
+I"�/<h2 id="question">Question</h2>
+
+<p>Consider quadratic Diophantine equations of the form: \(x^2-Dy^2=1\)</p>
+
+<p>For example, when \(D=13\), the minimal solution in \(x\) is \(649^2-13\times 180^2 = 1\).</p>
+
+<p>It can be assumed that there are no solutions in positive integers when \(D\) is square.</p>
+
+<p>By finding minimal solutions in \(x\) for \(D = \{2,3,5,6,7\}\), we obtain the following:</p>
+
+<p>[\begin{aligned}
+3^2-2\times2^2 &amp;= 1
+\cr
+2^2-3\times1^2 &amp;= 1
+\cr
+\color{red}{9}^2-5\times4^2 &amp;= 1
+\cr
+5^2-6\times2^2 &amp;= 1
+\cr
+8^2-7\times3^2 &amp;= 1
+\end{aligned}]</p>
+
+<p>Hence, by considering minimal solutions in \(x\) for \(D\leq 7\), the largest \(x\) is obtained when \(D=5\).</p>
+
+<p>Find the value of \(D\leq 1000\) in minimal solutions of \(x\) for which the largest value of \(x\) is obtained.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>Okay, so to make things clear after all the largest and minimal terminology, for a <strong>fixed</strong> \(D\) (non-square), there are an <strong>infinite</strong> number of integer pairs \((x,y)\) that satisfy the equation above. This question is asking us to find the solution with the <strong>smallest</strong> \(x\) for each \(D\), and then report which \(D\) has the <strong>largest</strong> “smallest” \(x\) solution. Hopefully that clears up some confusion.</p>
+
+<p>Now to the problem. A Diophantine equation is any polynomial equation where we only want integer solutions. A plethora of research has gone into these types of equations for so long because neat properties can be discovered. For this problem, I discovered that this Diophantine equation is actually known as Pell’s equation. In fact, Pell’s equation made its first appearance way back in 400 BC, and as such, simple algorithms are already in place to solve them.</p>
+
+<p>The <a href="https://en.wikipedia.org/wiki/Pell%27s_equation">Wikipedia article</a> lists many ways to solve it, but given what we have encountered so far, the following is the easiest:</p>
+
+<blockquote>
+  <p>Let \(\frac{h_i}{k_i}\) denote the sequence of convergents to the regular continued fraction for \(\sqrt{n}\). This sequence is unique. Then the pair \((x_1, y_1)\) solving Pell’s equation and minimizing \(x\) satisfies \(x_1 = h_i\) and \(y_1 = k_i\) for some \(i\).</p>
+</blockquote>
+
+<p>The article uses \(n\) in place of \(D\). So to solve this, all we have to do is keep calculating the convergents for \(\sqrt{D}\) until we encounter a pair which solves the equation. This is guaranteed to be the pair that minimizes \(x\). Both problems <a href="/ProjectEuler/ProjectEuler/Problem-64-Odd-period-square-roots/">64</a> and <a href="/ProjectEuler/ProjectEuler/Problem-65-Convergents-of-e/">65</a> deal with computing convergents of continued fractions. We can use those algorithms in this problem, and test each convergent to see if it solves the equation.</p>
+
+<p>I have one method which returns the periodic coefficients of the continued fraction of \(\sqrt{D}\), and a loop which continuously calculates \(h_i\) and \(k_i\) above for testing the equation. Each solution pair is saved and then the maximum \(x\) is grabbed later.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">periodCoeffs</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">a0</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">S</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="n">a0</span><span class="p">]</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">a0</span>
+    <span class="k">while</span> <span class="n">a</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">a0</span><span class="p">:</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">a</span> <span class="o">-</span> <span class="n">m</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">S</span> <span class="o">-</span> <span class="n">m</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">//</span> <span class="n">d</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">a0</span> <span class="o">+</span> <span class="n">m</span><span class="p">)</span> <span class="o">/</span> <span class="n">d</span><span class="p">)</span>
+        <span class="n">coeffs</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">coeffs</span>
+
+<span class="c1"># Diophantine equations of the form x^2 - Dy^2 = 1 are
+# known as Pell's equations. As long as D is not square,
+# a solution always exists. The minimizing x solution
+# can be derived by testing successive convergents
+# of the continued fraction of sqrt(D). This is
+# what I'll be doing here.
+</span>
+<span class="n">maxD</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">xySols</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">maxD</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+<span class="n">xySols</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxD</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">D</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">maxD</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="c1"># If D is not a perfect square
+</span>    <span class="n">sqrtD</span> <span class="o">=</span> <span class="n">D</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="k">if</span> <span class="n">sqrtD</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sqrtD</span><span class="p">):</span>
+        <span class="c1"># Find the coefficients of the
+</span>        <span class="c1"># continued fraction
+</span>        <span class="n">aCo</span> <span class="o">=</span> <span class="n">periodCoeffs</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+        <span class="n">hP</span> <span class="o">=</span> <span class="n">aCo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">kP</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">aCo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">hP</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">aCo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">while</span> <span class="n">h</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">D</span> <span class="o">*</span> <span class="n">k</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">an</span> <span class="o">=</span> <span class="n">aCo</span><span class="p">[(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">aCo</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">temphP</span><span class="p">,</span> <span class="n">tempkP</span> <span class="o">=</span> <span class="n">hP</span><span class="p">,</span> <span class="n">kP</span>
+            <span class="n">hP</span><span class="p">,</span> <span class="n">kP</span> <span class="o">=</span> <span class="n">h</span><span class="p">,</span> <span class="n">k</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">an</span> <span class="o">*</span> <span class="n">h</span> <span class="o">+</span> <span class="n">temphP</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">an</span> <span class="o">*</span> <span class="n">k</span> <span class="o">+</span> <span class="n">tempkP</span>
+            <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># We're here when a solution has been found.
+</span>        <span class="c1"># It has been proven that this solution minimizes x
+</span>        <span class="n">xySols</span><span class="p">[</span><span class="n">D</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\r</span><span class="s">D: '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">+</span> <span class="s">'/'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">maxD</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+<span class="k">print</span><span class="p">()</span>
+<span class="n">maxX</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">xySols</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'The max x occurs when D = {} with (x, y) = ({}, {}).'</span>
+      <span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">maxX</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">xySols</span><span class="p">[</span><span class="n">maxX</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">xySols</span><span class="p">[</span><span class="n">maxX</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+</code></pre></div></div>
+
+<p>Running the loop above results in an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>D: 1000/1000
+The max x occurs when D = 661 with (x, y) = (16421658242965910275055840472270471049, 638728478116949861246791167518480580).
+</code></pre></div></div>
+
+<p>Thus, the largest minimal solution in \(x\) occurs when \(D = \boxed{661}\).</p>
+:ET

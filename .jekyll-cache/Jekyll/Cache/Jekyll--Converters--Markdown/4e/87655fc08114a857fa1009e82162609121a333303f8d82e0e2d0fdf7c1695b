@@ -1,0 +1,67 @@
+I"�<h2 id="question">Question</h2>
+
+<p>Consider the fraction, \(n/d\), where \(n\) and \(d\) are positive integers. If \(n&lt;d\) and \(HCF(n,d)=1\), it is called a reduced proper fraction.</p>
+
+<p>If we list the set of reduced proper fractions for \(d\leq 8\) in ascending order of size, we get:</p>
+
+<p>[\frac{1}{8},\frac{1}{7},\frac{1}{6},\frac{1}{5},\frac{1}{4},\frac{2}{7},\frac{1}{3},\frac{3}{8},\mathbf{\frac{2}{5}}, \frac{3}{7},\frac{1}{2},\frac{4}{7},\frac{3}{5},\frac{5}{8},\frac{2}{3},\frac{5}{7},\frac{3}{4},\frac{4}{5},\frac{5}{6},\frac{6}{7},\frac{7}{8}]</p>
+
+<p>It can be seen that \(2/5\) is the fraction immediately to the left of \(3/7\).</p>
+
+<p>By listing the set of reduced proper fractions for \(d\leq 1\,000\,000\) in ascending order of size, find the numerator of the fraction immediately to the left of \(3/7\).</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>A direct brute force solution would be to loop through all denominators, and go through all reduced proper fractions with that denominator. However, there are simply too many fractions to check, and attempting to reduce will also take some time.</p>
+
+<p>To make the looping faster, we can ask a related question: <strong>Given</strong> a denominator \(d\), what is the closest fraction to the left of \(3/7\)? For example, if \(d=8\), we can see that \(3/8\) is the closest fraction to the left of \(3/7\). If we have fixed a denominator, it is simple to find the numerator:</p>
+
+<p>[\frac{n}{d} &lt; \frac{3}{7} \Rightarrow n &lt; \frac{3d}{7}]</p>
+
+<p>Now, \(3d/7\) may not be an integer, in which case we take the floor function to get the greatest integer for it. Additionally, we also have to be careful to not check denominators which are divisible by 7, since instead we will get the fraction itself. Cool, so then this is just a simple loop!</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Basically find the reduced fraction that is
+# closest to 3/7 on the left
+</span><span class="n">minDist</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">'inf'</span><span class="p">)</span>
+<span class="n">bestNum</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">bestDenom</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># Get the reduced fraction with
+# the corresponding denominator
+# that is closest to the left of 3/7.
+# Calculate distance for each one...
+</span><span class="k">for</span> <span class="n">denom</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1000001</span><span class="p">):</span>
+    <span class="c1"># Skip multiples of 7
+</span>    <span class="k">if</span> <span class="n">denom</span> <span class="o">%</span> <span class="mi">7</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="c1"># Calculate closest numerator
+</span>    <span class="n">num</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">denom</span> <span class="o">//</span> <span class="mi">7</span>
+    <span class="c1"># Calculate distance
+</span>    <span class="n">dist</span> <span class="o">=</span> <span class="mi">3</span><span class="o">/</span><span class="mi">7</span> <span class="o">-</span> <span class="n">num</span><span class="o">/</span><span class="n">denom</span>
+    <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">minDist</span><span class="p">:</span>
+        <span class="n">minDist</span> <span class="o">=</span> <span class="n">dist</span>
+        <span class="n">bestNum</span> <span class="o">=</span> <span class="n">num</span>
+        <span class="n">bestDenom</span> <span class="o">=</span> <span class="n">denom</span>
+<span class="k">print</span><span class="p">(</span><span class="n">bestNum</span><span class="p">,</span> <span class="s">'/'</span><span class="p">,</span> <span class="n">bestDenom</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running this gives an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>428570 / 999997
+0.3996735 seconds.
+</code></pre></div></div>
+
+<p>Thus, the fraction that is immediately to the left of \(3/7\) is \(\boxed{428\,570/999\,997}\), and hence the numerator is <strong>428570</strong>.</p>
+
+<h3 id="another-way-to-get-the-right-answer">Another Way to get the “right” answer</h3>
+
+<p>The following way will get you the right number, but only through coincidence. The method is that you find the greatest multiple of 7 less than one million, and subtract one from the resulting numerator. With 3/7, this fraction is 428571/999999. As you see, subtracting one from the numerator gets you the correct answer. However, the fraction itself is very wrong, and indeed, through a calculator:</p>
+
+<p>[\begin{aligned}
+	\frac{3}{7} &amp;\approx 0.428571429
+	<br />
+	\frac{428\,570}{999\,999} &amp;\approx 0.428570429
+	<br />
+	\frac{428\,570}{999\,997} &amp;\approx 0.428571286
+\end{aligned}]</p>
+:ET

@@ -1,0 +1,55 @@
+I"a<h2 id="question">Question</h2>
+
+<p>The cube, \(41063625 \left(345^3\right)\), can be permuted to produce two other cubes: \(56623104 \left(384^3\right)\) and \(66430125 \left(405^3\right)\). In fact, 41063625 is the smallest cube which has exactly three permutations of its digits which are also cube.</p>
+
+<p>Find the smallest cube for which exactly five permutations of its digits are cube.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>A simple and brief question. Now, notice they didn’t give us any digit bounds. The simplest thing to do is keep increasing the number of digits, until we get a set of 5 permutations. So here’s the methodology: For each number of digits \(k\), we generate all cubes that have \(k\) digits. Next, we sort each cube on its digits. One cube is a permutation of another if its sorted set of digits is exactly the same. Therefore, the thing we are looking for is the same sorted digit string appearing 5 times.</p>
+
+<p>This is simple enough to code, as <code class="highlighter-rouge">sorted(str())</code> converts it to a string and sorts. Since we are also lending ourselves to the use of <code class="highlighter-rouge">numpy</code>, we can <strong>vectorize</strong> the function, and have it apply to each element in a list, all in one line. The <code class="highlighter-rouge">np.unique</code> function along with setting <code class="highlighter-rouge">return_counts=True</code> will allow us to get counts of each permutation. Then, we simply see if we have a count at 5. If it is, we print them out and end. Otherwise, we continue to the next number of digits.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nDigs</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">foundCube</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="c1"># The following function sorts the digits
+# of a number
+</span><span class="n">sortDigits</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s">""</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+<span class="c1"># Vectorize so it can be applied to each
+# element in one go.
+</span><span class="n">vectSortDigs</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">sortDigits</span><span class="p">)</span>
+<span class="k">while</span> <span class="ow">not</span> <span class="n">foundCube</span><span class="p">:</span>
+    <span class="c1"># Find the upper and lower bound cube for these digits.
+</span>    <span class="n">lower</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="p">((</span><span class="n">nDigs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">upper</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">nDigs</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="c1"># Form an array of numbers cubed
+</span>    <span class="n">nums</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">uint64</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span>
+    <span class="c1"># Get the sorted list of digits for each number...
+</span>    <span class="n">perms</span> <span class="o">=</span> <span class="n">vectSortDigs</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+    <span class="c1"># Get all unique permutations and their counts
+</span>    <span class="n">uniques</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">unique</span><span class="p">(</span><span class="n">perms</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="c1"># We check here whether or not we got 5 perms
+</span>    <span class="c1"># Grab the index of the 5 perm, if it's not there
+</span>    <span class="c1"># it will throw an IndexError
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fivePerm</span> <span class="o">=</span> <span class="n">uniques</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">counts</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span>  <span class="c1"># Will throw IndexError if it doesn't exist
+</span>        <span class="n">origNums</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">perms</span> <span class="o">==</span> <span class="n">fivePerm</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'The five cubes are: '</span><span class="p">,</span> <span class="n">origNums</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'The cube roots are: '</span><span class="p">,</span> <span class="n">origNums</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">nDigs</span><span class="p">)</span>
+        <span class="n">foundCube</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">except</span> <span class="nb">IndexError</span><span class="p">:</span>
+        <span class="k">pass</span>  <span class="c1"># Skip, we didn't find a 5 set with this many digits...
+</span>    <span class="n">nDigs</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<p>Running the loop gets us an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The five cubes are:  [127035954683 352045367981 373559126408 569310543872 589323567104]
+The cube roots are:  [5027. 7061. 7202. 8288. 8384.]
+12 digits
+0.030961370484396847 seconds.
+</code></pre></div></div>
+
+<p>Therefore, \(5027^3, 7061^3, 7202^3, 8288^3\) and \(8384^3\) are all permutations of each other, with the smallest cube being <strong>127035954683</strong>.</p>
+:ET

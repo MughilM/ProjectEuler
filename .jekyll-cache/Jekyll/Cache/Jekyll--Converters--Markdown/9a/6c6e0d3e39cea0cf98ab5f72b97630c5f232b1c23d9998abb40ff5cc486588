@@ -1,0 +1,36 @@
+I"<h2 id="question">Question</h2>
+
+<p>145 is a curious number, as 1! + 4! + 5! = 1 + 24 + 120 = 145.</p>
+
+<p>Find the sum of all numbers which are equal to the sum of the factorial of their digits.</p>
+
+<p>Note: as 1! = 1 and 2! = 2 are not sums they are not included.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>Firstly, there is no upper bound given in the problem, implying we need to find it. Say our test number has \(k\) digits. The largest this number can be is a set of \(k\) 9’s. In this case, the largest this number can be is \(k\times9!\). If \(k=8\), then this value is \(8\times9! = 2\,903\,040\), only 7 digits. Thus, we only need to check numbers up to 7 digits long. Additionally, since \(7\times9! = 2\,540\,160\), we only need to check up till this number.</p>
+
+<p>Below is the simple for loop used to calculate the sum of all numbers which satisfy the property.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">factSum</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">math</span><span class="p">.</span><span class="n">factorial</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2540161</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">factSum</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="n">i</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="n">i</span>
+<span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The output of the above is,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>40730
+8.536330512194187 seconds.
+</code></pre></div></div>
+
+<p>Therefore, our sum is <strong>40730</strong>. From the output, we can see that we could have safely ignored all 6 and 7 digit numbers and still have gotten the same answer!</p>
+:ET

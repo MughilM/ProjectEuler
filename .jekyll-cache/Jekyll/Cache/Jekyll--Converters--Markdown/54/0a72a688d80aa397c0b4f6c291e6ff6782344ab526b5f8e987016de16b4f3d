@@ -1,0 +1,162 @@
+I"*`<h2 id="question">Question</h2>
+
+<p>In the game, <em>Monopoly</em>, the standard board is set up in the following way:</p>
+
+<p><img src="http://localhost:4000/ProjectEuler\assets\Images\p084.png" alt="monopolyImg" /></p>
+
+<p>A player starts on the GO square and adds the scores on two 6-sided dice to determine the number of squares they advance in a clockwise direction. Without any further rules we would expect to visit each square with equal probability: 2.5%. However, landing on G2J (Go To Jail), CC (community chest), and CH (chance) changes this distribution.</p>
+
+<p>In addition to G2J, and one card from each of CC and CH , that orders the player to go directly to jail, if a player rolls three consecutive doubles, they do not advance the result of their 3rd roll. Instead they proceed directly to jail.</p>
+
+<p>At the beginning of the game,  the CC and CH cards are randomly shuffled. When a player lands on CC or CH they take a card from the top of the respective pile and, after following the instructions, it is returned to the bottom of the pile. There are sixteen cards in each pile, but for the purpose of this problem we are only concerned with cards that order a movement; any instruction not concerned with movement will be ignored and the player will remain on the CC/CH square.</p>
+
+<ul>
+  <li>Community Chest (2/16 cards):
+    <ul>
+      <li>Advance to GO</li>
+      <li>Go to JAIL</li>
+    </ul>
+  </li>
+  <li>Chance (10/16 cards):
+    <ul>
+      <li>Advance to GO</li>
+      <li>Go to JAIL</li>
+      <li>Go to C1</li>
+      <li>Go to E3</li>
+      <li>Go to H2</li>
+      <li>Go to R1</li>
+      <li>Go to next R (railway company)</li>
+      <li>Go to next R</li>
+      <li>Go to next U (utility company)</li>
+      <li>Go back 3 squares</li>
+    </ul>
+  </li>
+</ul>
+
+<p>The heart of this problem concerns the likelihood of visiting a particular square. That is, the probability of finishing at that square after a roll. For this reason it should be clear that, with the exception of G2J for which the probability of finishing is zero, the CH squares will have the lowest probabilities, as 5/8 request a movement to another square, and it is the final square that the player finishes on that we are interested in. We shall make no distinction between “Just Visiting” and being to sent to JAIL, and we shall also ignore the rule about requiring a double to “get out of jail”, assuming they pay to get out on their next turn.</p>
+
+<p>By starting on GO and numbering the squares sequentially from 00 to 39 we can concatenate these two-digit numbers to produce strings that correspond with sets of squares.</p>
+
+<p>Statistically it can be shown that the three most popular squares, in order, are JAIL (6.24%) = Square 10, E3 (3.18%) = Square 24, and GO (3.09%) = Square 00. So these three most popular squares can be listed with the six-digit modal string: 102400.</p>
+
+<p>If, instead of using two 6-sided dice, two 4-sided dice are used, find the six-digit modal string.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>Quite frankly, this is one of those problems that is “tedious”, as we are just programming the rules of the game. There isn’t much to explain from me here, other than just showing the code. To calculate something like this, we can simply run a simulation for a very large number of turns, and see the long-term probability. Another way to do this would be to calculate conditional probabilities to land on a particular square, given that <strong>were</strong> on a square previously. Due to the large number of squares, it gets pretty messy, and so we’ll stick with the first method. I’ve chosen to do 500 thousand rolls, but it’s also possible it will converge earlier.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+
+<span class="n">spaces</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="s">'GO'</span><span class="p">,</span> <span class="s">'A1'</span><span class="p">,</span> <span class="s">'CC1'</span><span class="p">,</span> <span class="s">'A2'</span><span class="p">,</span> <span class="s">'T1'</span><span class="p">,</span> <span class="s">'R1'</span><span class="p">,</span> <span class="s">'B1'</span><span class="p">,</span> <span class="s">'CH1'</span><span class="p">,</span>
+          <span class="s">'B2'</span><span class="p">,</span> <span class="s">'B3'</span><span class="p">,</span> <span class="s">'JAIL'</span><span class="p">,</span> <span class="s">'C1'</span><span class="p">,</span> <span class="s">'U1'</span><span class="p">,</span> <span class="s">'C2'</span><span class="p">,</span> <span class="s">'C3'</span><span class="p">,</span> <span class="s">'R2'</span><span class="p">,</span>
+          <span class="s">'D1'</span><span class="p">,</span> <span class="s">'CC2'</span><span class="p">,</span> <span class="s">'D2'</span><span class="p">,</span> <span class="s">'D3'</span><span class="p">,</span> <span class="s">'FP'</span><span class="p">,</span> <span class="s">'E1'</span><span class="p">,</span> <span class="s">'CH2'</span><span class="p">,</span> <span class="s">'E2'</span><span class="p">,</span>
+          <span class="s">'E3'</span><span class="p">,</span> <span class="s">'R3'</span><span class="p">,</span> <span class="s">'F1'</span><span class="p">,</span> <span class="s">'F2'</span><span class="p">,</span> <span class="s">'U2'</span><span class="p">,</span> <span class="s">'F3'</span><span class="p">,</span> <span class="s">'G2J'</span><span class="p">,</span> <span class="s">'G1'</span><span class="p">,</span>
+          <span class="s">'G2'</span><span class="p">,</span> <span class="s">'CC3'</span><span class="p">,</span> <span class="s">'G3'</span><span class="p">,</span> <span class="s">'R4'</span><span class="p">,</span> <span class="s">'CH3'</span><span class="p">,</span> <span class="s">'H1'</span><span class="p">,</span> <span class="s">'T2'</span><span class="p">,</span> <span class="s">'H2'</span><span class="p">])</span>
+
+<span class="c1"># Methods to find distance to nearest railroad and utility
+# For chance and community chest, I'm not rotating the deck
+# I'm simply taking a random but even then the distribution
+# is still similar
+</span><span class="k">def</span> <span class="nf">nearestRail</span><span class="p">(</span><span class="n">currSquare</span><span class="p">,</span> <span class="n">spaces</span><span class="o">=</span><span class="n">spaces</span><span class="p">):</span>
+    <span class="c1"># Get the railroad spaces
+</span>    <span class="n">RRspaces</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">where</span><span class="p">((</span><span class="n">spaces</span> <span class="o">==</span> <span class="s">'R1'</span><span class="p">)</span> <span class="o">|</span>
+                        <span class="p">(</span><span class="n">spaces</span> <span class="o">==</span> <span class="s">'R2'</span><span class="p">)</span> <span class="o">|</span>
+                         <span class="p">(</span><span class="n">spaces</span> <span class="o">==</span> <span class="s">'R3'</span><span class="p">)</span> <span class="o">|</span>
+                          <span class="p">(</span><span class="n">spaces</span> <span class="o">==</span> <span class="s">'R4'</span><span class="p">))</span>
+    <span class="c1"># Add the index of the square if it
+</span>    <span class="c1"># wrapped around
+</span>    <span class="n">RRspaces</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">RRspaces</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">spaces</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="nb">min</span><span class="p">(</span><span class="n">RRspaces</span><span class="p">))</span>
+    <span class="c1"># Subtract each square from current,
+</span>    <span class="c1"># smallest positive is the closest
+</span>    <span class="n">dists</span> <span class="o">=</span> <span class="n">RRspaces</span> <span class="o">-</span> <span class="n">currSquare</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="nb">min</span><span class="p">(</span><span class="n">dists</span><span class="p">[</span><span class="n">dists</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">nearestUtility</span><span class="p">(</span><span class="n">currSquare</span><span class="p">,</span> <span class="n">spaces</span><span class="o">=</span><span class="n">spaces</span><span class="p">):</span>
+    <span class="c1"># Get the utility spaces
+</span>    <span class="n">Uspaces</span><span class="p">,</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">where</span><span class="p">((</span><span class="n">spaces</span> <span class="o">==</span> <span class="s">'U1'</span><span class="p">)</span> <span class="o">|</span>
+                        <span class="p">(</span><span class="n">spaces</span> <span class="o">==</span> <span class="s">'U2'</span><span class="p">))</span>
+    <span class="n">Uspaces</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">Uspaces</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">spaces</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="nb">min</span><span class="p">(</span><span class="n">Uspaces</span><span class="p">))</span>
+    <span class="n">dists</span> <span class="o">=</span> <span class="n">Uspaces</span> <span class="o">-</span> <span class="n">currSquare</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="nb">min</span><span class="p">(</span><span class="n">dists</span><span class="p">[</span><span class="n">dists</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">drawCC</span><span class="p">(</span><span class="n">currSquare</span><span class="p">,</span> <span class="n">spaces</span><span class="o">=</span><span class="n">spaces</span><span class="p">):</span>
+    <span class="n">cardNum</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cardNum</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># Advance to GO
+</span>        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">spaces</span><span class="p">)</span> <span class="o">-</span> <span class="n">currSquare</span>
+    <span class="k">elif</span> <span class="n">cardNum</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span> <span class="c1"># Go to JAIL
+</span>        <span class="n">jail</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">spaces</span> <span class="o">==</span> <span class="s">'JAIL'</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">jail</span> <span class="o">-</span> <span class="n">currSquare</span>
+        <span class="k">if</span> <span class="n">dist</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dist</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">spaces</span><span class="p">)</span> <span class="o">+</span> <span class="n">dist</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># Don't move from current
+</span>        <span class="k">return</span> <span class="mi">0</span>
+<span class="k">def</span> <span class="nf">drawCH</span><span class="p">(</span><span class="n">currSquare</span><span class="p">,</span> <span class="n">spaces</span><span class="o">=</span><span class="n">spaces</span><span class="p">):</span>
+    <span class="n">cardNum</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
+    <span class="n">dests</span> <span class="o">=</span> <span class="p">[</span><span class="s">'GO'</span><span class="p">,</span> <span class="s">'JAIL'</span><span class="p">,</span> <span class="s">'C1'</span><span class="p">,</span> <span class="s">'E3'</span><span class="p">,</span> <span class="s">'H2'</span><span class="p">,</span> <span class="s">'R1'</span><span class="p">,</span>
+             <span class="s">'RR'</span><span class="p">,</span> <span class="s">'RR'</span><span class="p">,</span> <span class="s">'U'</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">cardNum</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="n">spaceToGo</span> <span class="o">=</span> <span class="n">dests</span><span class="p">[</span><span class="n">cardNum</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Railroad or Utility
+</span>        <span class="k">if</span> <span class="n">cardNum</span> <span class="o">==</span> <span class="mi">7</span> <span class="ow">or</span> <span class="n">cardNum</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">nearestRail</span><span class="p">(</span><span class="n">currSquare</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">cardNum</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">nearestUtility</span><span class="p">(</span><span class="n">currSquare</span><span class="p">)</span>
+        <span class="n">spaceNum</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">spaces</span> <span class="o">==</span> <span class="n">spaceToGo</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">spaceNum</span> <span class="o">-</span> <span class="n">currSquare</span>
+        <span class="k">if</span> <span class="n">dist</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dist</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">spaces</span><span class="p">)</span> <span class="o">+</span> <span class="n">dist</span>
+    <span class="k">elif</span> <span class="n">cardNum</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span> <span class="c1"># Go back 3 spaces
+</span>        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">spaces</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">spaces</span><span class="p">))</span>
+<span class="n">diceSize</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">currSpace</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">doublesInARow</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">rounds</span> <span class="o">=</span> <span class="mi">500000</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rounds</span><span class="p">):</span>
+    <span class="n">roll1</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">diceSize</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">roll2</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">diceSize</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">roll1</span> <span class="o">==</span> <span class="n">roll2</span><span class="p">:</span>
+        <span class="n">doublesInARow</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">doublesInARow</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span> <span class="c1"># Go straight to JAIL
+</span>            <span class="n">currSpace</span> <span class="o">=</span> <span class="mi">10</span>
+            <span class="n">doublesInARow</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">continue</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">doublesInARow</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">toMove</span> <span class="o">=</span> <span class="n">roll1</span> <span class="o">+</span> <span class="n">roll2</span>
+    <span class="n">currSpace</span> <span class="o">=</span> <span class="p">(</span><span class="n">currSpace</span> <span class="o">+</span> <span class="n">toMove</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">spaces</span><span class="p">)</span>
+    <span class="c1"># Check if you're on Chance or Community Chest or Go to Jail
+</span>    <span class="k">if</span> <span class="n">spaces</span><span class="p">[</span><span class="n">currSpace</span><span class="p">]</span> <span class="o">==</span> <span class="s">'CH1'</span> <span class="ow">or</span> <span class="n">spaces</span><span class="p">[</span><span class="n">currSpace</span><span class="p">]</span> <span class="o">==</span> <span class="s">'CH2'</span> <span class="ow">or</span> <span class="n">spaces</span><span class="p">[</span><span class="n">currSpace</span><span class="p">]</span> <span class="o">==</span> <span class="s">'CH3'</span><span class="p">:</span>
+        <span class="n">currSpace</span> <span class="o">=</span> <span class="p">(</span><span class="n">currSpace</span> <span class="o">+</span> <span class="n">drawCH</span><span class="p">(</span><span class="n">currSpace</span><span class="p">))</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">spaces</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">spaces</span><span class="p">[</span><span class="n">currSpace</span><span class="p">]</span> <span class="o">==</span> <span class="s">'CC1'</span> <span class="ow">or</span> <span class="n">spaces</span><span class="p">[</span><span class="n">currSpace</span><span class="p">]</span> <span class="o">==</span> <span class="s">'CC2'</span> <span class="ow">or</span> <span class="n">spaces</span><span class="p">[</span><span class="n">currSpace</span><span class="p">]</span> <span class="o">==</span> <span class="s">'CC3'</span><span class="p">:</span>
+        <span class="n">currSpace</span> <span class="o">=</span> <span class="p">(</span><span class="n">currSpace</span> <span class="o">+</span> <span class="n">drawCC</span><span class="p">(</span><span class="n">currSpace</span><span class="p">))</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">spaces</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">spaces</span><span class="p">[</span><span class="n">currSpace</span><span class="p">]</span> <span class="o">==</span> <span class="s">'G2J'</span><span class="p">:</span> <span class="c1"># JAIL = 10
+</span>        <span class="n">currSpace</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="c1"># Add to a count
+</span>    <span class="n">counts</span><span class="p">[</span><span class="n">currSpace</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="c1"># Get the 3 largest probabilities
+</span><span class="n">first</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="c1"># Set that to negative infinity
+</span><span class="n">counts</span><span class="p">[</span><span class="n">first</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">'-inf'</span><span class="p">)</span>
+<span class="n">second</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="n">counts</span><span class="p">[</span><span class="n">second</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">'-inf'</span><span class="p">)</span>
+<span class="n">third</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">first</span><span class="p">).</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">second</span><span class="p">).</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">third</span><span class="p">).</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+
+
+
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="s">'seconds.'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running this long code, we get as our modal string,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>101524
+31.810585500000002 seconds.
+</code></pre></div></div>
+
+<p>Thus, JAIL is still the most popular, but now Pennsylvania Railroad and Illinois Avenue come in 2nd and 3rd respectively.</p>
+:ET

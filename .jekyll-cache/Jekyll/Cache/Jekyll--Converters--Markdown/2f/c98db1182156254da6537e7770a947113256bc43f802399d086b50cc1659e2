@@ -1,0 +1,111 @@
+I"�.<h2 id="question">Question</h2>
+
+<p>A permutation is an ordered arrangement of objects. For example, 3124 is one possible permutation of the digits 1, 2, 3, and 4. If all the permutations are listed numerically or alphabetically, we call it lexicographic order. The lexicographic permutations of 0, 1 and 2 are:</p>
+
+<p align="center">
+    012	021	102	120	201	210
+</p>
+
+<p>What is the millionth lexicographic permutation of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>As there are \(10! = 3\,628\,800\), it is clearly unfeasible to try and find all permutations and sort them all. The first permutation in the list is simply all the numbers in ascending order: 0123456789. We need to way to quickly find the next permutation that comes lexicographically after this one. Fortunately, this is an extremely common problem and many people have written about it. I will be using the algorithm used in this <a href="https://www.nayuki.io/page/next-lexicographical-permutation-algorithm">link</a>.</p>
+
+<p>The gist of the algorithm is that we find the first element from the right that does not follow non-increasing order. Then, we swap this element with the least element in the non-increasing part of the list. Finally, we reverse the non-increasing part. That’s it!</p>
+
+<p>It’s relatively simple to implement the 3 steps outlined above. Additionally, using Python’s generator structures, we can iterate through and generate the permutations on the fly. Below is the function to find the next permutation. I also use a small helper function to find the index of the first element in the index which does not follow non-increasing order from the <em>right</em>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Returns index of first element
+# from RIGHT which isn't in
+# non-increasing order.
+</span><span class="k">def</span> <span class="nf">indexOfNonIncreasing</span><span class="p">(</span><span class="n">list_</span><span class="p">):</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">list_</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">list_</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">j</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="c1"># If i is 0, then the whole list is
+</span>    <span class="c1"># in non-increasing order.
+</span>    <span class="k">return</span> <span class="n">j</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">genPermutations</span><span class="p">(</span><span class="n">charaSet</span><span class="p">):</span>
+    <span class="c1"># While we haven't gotten to the
+</span>    <span class="c1"># last permutation
+</span>    <span class="n">index</span> <span class="o">=</span> <span class="n">indexOfNonIncreasing</span><span class="p">(</span><span class="n">charaSet</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">index</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Find the least element greater
+</span>        <span class="c1"># than what's at index...
+</span>        <span class="n">leastEle</span> <span class="o">=</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">leastEle</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">charaSet</span><span class="p">)</span> <span class="ow">and</span> <span class="n">charaSet</span><span class="p">[</span><span class="n">leastEle</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">charaSet</span><span class="p">[</span><span class="n">index</span><span class="p">]:</span>
+            <span class="n">leastEle</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># At this point we'll be one over, so subtract one.
+</span>        <span class="n">leastEle</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="c1"># Swap the numbers at the two locations
+</span>        <span class="n">temp</span> <span class="o">=</span> <span class="n">charaSet</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">charaSet</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">charaSet</span><span class="p">[</span><span class="n">leastEle</span><span class="p">]</span>
+        <span class="n">charaSet</span><span class="p">[</span><span class="n">leastEle</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp</span>
+        <span class="c1"># Reverse the portion of non-increasingness
+</span>        <span class="n">charaSet</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">charaSet</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Yield it.
+</span>        <span class="k">yield</span> <span class="n">charaSet</span>
+        <span class="c1"># Find the next index
+</span>        <span class="n">index</span> <span class="o">=</span> <span class="n">indexOfNonIncreasing</span><span class="p">(</span><span class="n">charaSet</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Now, we can run a loop through the permutations until we reach the one millionth one. However, there is a slight change. A generator runs once before it even enters the for loop, so in fact we need to find when our iterator variable is \(999\,999\), as below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">digits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">perm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">genPermutations</span><span class="p">(</span><span class="n">digits</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="c1"># The generator runs once before it enters the loop,
+</span>    <span class="c1"># so we need the permutation at 999999
+</span>    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">999999</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">perm</span><span class="p">)))</span>
+        <span class="k">break</span>
+</code></pre></div></div>
+
+<p>After running, the output is,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2783915460
+1.479740270925111 seconds.
+</code></pre></div></div>
+
+<p>Thus, <strong>2783915460</strong> is the one millionth permutation.</p>
+
+<h3 id="bonus">Bonus!</h3>
+
+<p>It’s actually possible to solve this problem using a basic calculator to find each digit from left to right.</p>
+
+<p>Notice that with the 10 digits we have on hand, there are exactly \(9! = 362\,880\) permutations that start with each digit. Additionally, since we know that the permutations need to be in lexicographic order, the first \(362\,880\) permutations will start with \(0\), while the next \(362\,880\) will start with \(1\), and so on. Because \(3\times362\,880&gt;1\,000\,000\), the one millionth iteration starts with \(2\). Additionally, the first permutation that starts with \(2\) is \(2013456789\), the \(725\,761^{\text{th}}\) one.</p>
+
+<p>We can do the same analysis for the second digit. There are \(1\,000\,000-725\,760 = 274\,240\) more permutations left. This time, there are \(8! = 40\,320\) permutations that start with each of the digits, except for \(2\), since we already used that. \(\lceil274\,240 / 40\,320\rceil = 7\), so the seventh digit in our list, or \(7\) will be the second digit in the one millionth digit.</p>
+
+<p>So, in each step, we divide the remaining permutations to go by the number of ways to arrange the remaining digits, and take the ceiling to find which digit to use. In code, we do integer division i.e. the floor function, because we are dealing with 0-indexing. In the same manner, we decrement the number of permutations left by 1 before we divide. See below:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">digits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s">'0123456789'</span><span class="p">)</span>
+<span class="n">permNum</span> <span class="o">=</span> <span class="mi">1000000</span>
+<span class="n">perm</span> <span class="o">=</span> <span class="s">''</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="n">ways</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="n">factorial</span><span class="p">(</span><span class="mi">10</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span>
+    <span class="c1"># It's permNum - 1 because integer
+</span>    <span class="c1"># division is 0-index like.
+</span>    <span class="c1"># If ways is 2, then the 4th permutation should
+</span>    <span class="c1"># still be the 2nd digit, not the 3rd digit.
+</span>    <span class="n">loc</span> <span class="o">=</span> <span class="p">(</span><span class="n">permNum</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">ways</span>
+    <span class="n">digit</span> <span class="o">=</span> <span class="n">digits</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span>
+    <span class="c1"># Remove the element at loc.
+</span>    <span class="k">del</span> <span class="n">digits</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span>
+    <span class="n">perm</span> <span class="o">+=</span> <span class="n">digit</span>
+    <span class="c1"># Subtract
+</span>    <span class="n">permNum</span> <span class="o">-=</span> <span class="n">loc</span> <span class="o">*</span> <span class="n">ways</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">perm</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running the above results in an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2783915460
+7.94073132950361e-05 seconds.
+</code></pre></div></div>
+
+<p>Notice the time is much faster, almost instantaneously.</p>
+
+:ET

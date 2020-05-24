@@ -1,0 +1,28 @@
+I"9<h2 id="question">Question</h2>
+
+<p>The decimal number, \(585=1001001001_2\) (binary), is palindromic in both bases.</p>
+
+<p>Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2.</p>
+
+<p>(Please note that the palindromic number, in either base, may not include leading zeros.)</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>Nothing fancy to do here other than run a simple for loop. For binary conversion, Python has a convenient built-in function called <code class="highlighter-rouge">bin</code>. Only problem is that there is a leading <code class="highlighter-rouge">'0b'</code> in the output to signify binary. For example, <code class="highlighter-rouge">bin(25) = '0b11001'</code>. But this is easily handled because it is a string, so we take the rest of the string starting with the 3rd character. A quick and dirty way to check if a string is a palindrome is simply to reverse the string and check if the original is equal to the reversed version. You can see the for loop below which adds all such numbers.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">isPalindrome</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1000000</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">isPalindrome</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="ow">and</span> <span class="n">isPalindrome</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]):</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">i</span>
+<span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Notice the <code class="highlighter-rouge">isPalindrome</code> function is written using lambda calculus for a one-liner :). The output of the above program is,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>872187
+0.49978133307417255 seconds.
+</code></pre></div></div>
+
+<p>Thus, the sum of all numbers below one million which are palindromes in both base 10 and base 2 is <strong>872187</strong>.</p>
+:ET

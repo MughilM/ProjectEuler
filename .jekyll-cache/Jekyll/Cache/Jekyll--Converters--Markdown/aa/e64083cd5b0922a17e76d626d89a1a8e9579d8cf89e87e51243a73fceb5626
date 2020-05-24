@@ -1,0 +1,48 @@
+I"0<h2 id="question">Question</h2>
+
+<p>It turns out that 12 cm is the smallest length of wire that can be bent to form an integer sided right angle triangle in exactly one way, but there are many more examples.</p>
+
+<p>[\mathbf{12}\textbf{ cm}: (3,4,5)
+<br />
+\mathbf{24}\textbf{ cm}: (6,8,10)
+<br />
+\mathbf{30}\textbf{ cm}: (5,12,13)
+<br />
+\mathbf{36}\textbf{ cm}: (9,12,15)
+<br />
+\mathbf{40}\textbf{ cm}: (8,15,17)
+<br />
+\mathbf{48}\textbf{ cm}: (12,16,20)]</p>
+
+<p>In contrast, some lengths of wire, like 20 cm, cannot be bent to form an integer sided right angle triangle, and other lengths allow more than one solution to be found; for example, using 120 cm it is possible to form exactly three different integer sided right angle triangles.</p>
+
+<p>[\mathbf{120}\textbf{ cm}: (30,40,50), (20,48,52), (24,45,51)]</p>
+
+<p>Given that \(L\) is the length of the wire, for how many values of \(L\leq 1\,500\,000\) can exactly one integer sided right angle triangle be formed?</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>There is a problem, namely <a href="/ProjectEuler/ProjectEuler/Problem-39-Integer-right-triangles/">Problem 39</a>, that is extremely similar to this, in that we essentially have a bound on the perimeter of the triangle. Like that problem, it’s easier to generate the triangles instead of checking each possible perimeter and see if a triangle exists. The method of generating the triples is the same; please consult the write-up of that problem for the details on we generate them. Here, I’ve modified it slightly to include the matrices in the method itself.</p>
+
+<p>The method only generates primitive triples, however, so we have to take into multiples of it i.e. the (30,40,50) is a multiple of the (3,4,5) triangle. Once the perimeter of the primitive triangle has been computed, we just add all multiples of it until the limit. As we go along, we place on regard on duplicates yet.</p>
+
+<p>Next, we use <code class="highlighter-rouge">np.unique</code> along with the <code class="highlighter-rouge">return_counts</code> keyword to get the number of times each perimeter shows up in the list. Anything that has shown up exactly once we include. This method is in fact faster than using Python’s built-in structure of <code class="highlighter-rouge">set</code> due to how many elements there are.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">maxi</span> <span class="o">=</span> <span class="mi">1500000</span>
+<span class="n">sums</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">triple</span> <span class="ow">in</span> <span class="n">genTriples</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]),</span> <span class="n">maxi</span><span class="o">=</span><span class="n">maxi</span><span class="p">):</span>
+    <span class="n">primPerim</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">triple</span><span class="p">)</span>
+    <span class="n">sums</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">primPerim</span><span class="p">,</span> <span class="n">maxi</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">primPerim</span><span class="p">))</span>
+<span class="n">uniques</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">unique</span><span class="p">(</span><span class="n">sums</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">exactlyOnce</span> <span class="o">=</span> <span class="n">uniques</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">counts</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">exactlyOnce</span><span class="p">.</span><span class="n">size</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running the above results in an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>161667
+2.8955301999999996 seconds.
+</code></pre></div></div>
+
+<p>Thus, there are <strong>161667</strong> values under 1.5 million such that there exists exactly one integer sided right angle triangle.</p>
+:ET

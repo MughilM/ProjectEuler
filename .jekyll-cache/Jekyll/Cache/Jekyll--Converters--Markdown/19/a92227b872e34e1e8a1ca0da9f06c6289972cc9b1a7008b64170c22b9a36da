@@ -1,0 +1,153 @@
+I"F(<h2 id="question">Question</h2>
+
+<p>The following undirected network consists of seven vertices and twelve edges with a total weight of 243.</p>
+
+<p><img src="http://localhost:4000/ProjectEuler/assets/Images/p107_1.png" alt="networkImg" /></p>
+
+<p>The same network can be represented by the matrix below.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+      <th>E</th>
+      <th>F</th>
+      <th>G</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>A</strong></td>
+      <td>-</td>
+      <td>16</td>
+      <td>12</td>
+      <td>21</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><strong>B</strong></td>
+      <td>16</td>
+      <td>-</td>
+      <td>-</td>
+      <td>17</td>
+      <td>20</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><strong>C</strong></td>
+      <td>12</td>
+      <td>-</td>
+      <td>-</td>
+      <td>28</td>
+      <td>-</td>
+      <td>31</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><strong>D</strong></td>
+      <td>21</td>
+      <td>17</td>
+      <td>28</td>
+      <td>-</td>
+      <td>18</td>
+      <td>19</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <td><strong>E</strong></td>
+      <td>-</td>
+      <td>20</td>
+      <td>-</td>
+      <td>18</td>
+      <td>-</td>
+      <td>-</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <td><strong>F</strong></td>
+      <td>-</td>
+      <td>-</td>
+      <td>31</td>
+      <td>19</td>
+      <td>-</td>
+      <td>-</td>
+      <td>27</td>
+    </tr>
+    <tr>
+      <td><strong>G</strong></td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>23</td>
+      <td>11</td>
+      <td>27</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>However, it is possible to optimise the network by network by removing some edges and still ensure that all points on the network remain connected. The network which achieves the maximum saving is shown below. It has a weight of 93, representing a saving of 243 - 93 = 150 from the original network.</p>
+
+<p><img src="http://localhost:4000/ProjectEuler/assets/Images/p107_2.png" alt="cutDownImg" /></p>
+
+<p>Using <a href="https://projecteuler.net/project/resources/p107_network.txt">network.txt</a> (right click and ‘Save Link/Target As…’), a 6K text file containing a network with forty vertices, and given in matrix form, find the maximum saving which can be achieved by removing redundant edges whilst ensuring that the network remains connected.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>The meaning of “connected” is exactly as it sounds like: We don’t have a vertex that’s floating off in space. More specifically, <strong>starting from any vertex in the graph</strong>, a path exists from it to <strong>every other vertex</strong>.</p>
+
+<p>Since we want the <strong>minimal weight</strong> edges, a good algorithm is: At each step, find the edge with the <strong>biggest weight</strong> that we can remove such that the graph still remains connected.</p>
+
+<p>When do we stop? We stop when <strong>every edge would lead to a disconnected graph once removed.</strong></p>
+
+<p>A pretty simple algorithm. With respect to code, there is a useful package called <code class="highlighter-rouge">networkx</code>, which handles graph structures. It has functions such as <code class="highlighter-rouge">add_edge</code>, <code class="highlighter-rouge">add_node</code>, as well as <code class="highlighter-rouge">is_connected</code>, which will come in handy. As an aside, due to how our input file looks like, I use the <code class="highlighter-rouge">read_csv</code> function from the <code class="highlighter-rouge">pandas</code> package.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="n">nx</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'./p107_network.txt'</span><span class="p">,</span> <span class="n">na_values</span><span class="o">=</span><span class="s">'-'</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="c1"># Add all the vertices
+</span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">G</span><span class="p">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="c1"># Go through the weights and add the edges
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">columns</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="p">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]):</span>
+            <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">df</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
+<span class="n">sortedEdges</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">G</span><span class="p">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s">'weight'</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">amountBefore</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sortedEdges</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Sum of edges before:'</span><span class="p">,</span> <span class="n">amountBefore</span><span class="p">)</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sortedEdges</span><span class="p">)):</span>
+    <span class="c1"># Make a copy and delete the deg and check if it's connected
+</span>    <span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">H</span><span class="p">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="n">sortedEdges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">sortedEdges</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">nx</span><span class="p">.</span><span class="n">is_connected</span><span class="p">(</span><span class="n">H</span><span class="p">):</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">H</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">amountAfter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">G</span><span class="p">.</span><span class="n">edges</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s">'weight'</span><span class="p">)]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">'Sum of edges after:'</span><span class="p">,</span> <span class="n">amountAfter</span><span class="p">)</span>
+
+<span class="n">savings</span> <span class="o">=</span> <span class="n">amountBefore</span> <span class="o">-</span> <span class="n">amountAfter</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">savings</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running the code results in an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Sum of edges before: 261832
+Sum of edges after: 2153
+259679
+0.9926626999999999 seconds.
+</code></pre></div></div>
+
+<p>Thus, we save <strong>259679</strong> after making the minimum weight graph, also known as a <strong>minimum spanning tree</strong>.</p>
+:ET

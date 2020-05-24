@@ -1,0 +1,55 @@
+I"@<h2 id="question">Question</h2>
+
+<p>We shall say that an \(n\)-digit number is pandigital if it makes use of all the digits 1 to \(n\) exactly once; for example, the 5-digit number, 15234, is 1 through 5 pandigital.</p>
+
+<p>The product 7254 is unusual, as the identity, \(39\times 186=7254\), containing multiplicand, multiplier, and product is 1 through 9 pandigital.</p>
+
+<p>Find the sum of all products whose multiplicand/multiplier/product identity can be written as a 1 through 9 pandigital.</p>
+
+<p>HINT: Some products can be obtained in more than one way so be sure to only include it once in your sum.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>We will need to cover all possible equations of multiplicand times multiplier equals product. Python has a convenient package <code class="highlighter-rouge">itertools</code>, which is home to the <code class="highlighter-rouge">permutations</code> method, which returns a generator that will go through each permutation of an iterable i.e. a string, list, tuple, etc. Therefore, we can use to loop through all 9 digit arrangements of the digits 1 to 9. Next, we need to place the multiplication sign and equals sign at all valid positions. The multiplication sign can be placed anywhere between the 1st and 8th digit. The reason is that we also need space for the equals sign, which comes after the multiplication sign.</p>
+
+<p>For example, with the product given above, we would start from \(3\times 9=1867254\) and end with \(3918672\times 5=4\). However, we don’t need to check the last product, because as we loop through locations to place the equals sign, the product will get smaller and smaller. Eventually, it will be less than the actual product, and then we can stop and check the next spot for the multiplication sign. For example, with the multiplication sign being after the 3, the last product we will check is \(3\times 918=67254\), because the next product \(3\times 9186&gt;7254\). With this, we can skip a fair number of possibilities.</p>
+
+<p>Below is the code to run through all permutations and see if a multiplicand times multiplier equaling a product exists.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">products</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="s">'123456789'</span><span class="p">):</span>
+    <span class="c1"># We place a multiplication and equals
+</span>    <span class="c1"># sign at all possible places here.
+</span>    <span class="c1"># Once the product goes above the RHS,
+</span>    <span class="c1"># we can stop and test putting the
+</span>    <span class="c1"># multiplication sign in the next spot.
+</span>    <span class="c1"># The multiplication symbol can be placed
+</span>    <span class="c1"># after the 1st digit, or before the
+</span>    <span class="c1"># second to last digit (because we need equals)
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">perm</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="c1"># Now we place an equals sign anywhere
+</span>        <span class="c1"># from at least one digit after
+</span>        <span class="c1"># the multiplicand to one before the result.
+</span>        <span class="c1"># Once the product becomes larger than RHS,
+</span>        <span class="c1"># we stop, because the RHS will only get smaller.
+</span>        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">perm</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">mCand</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">perm</span><span class="p">[:</span><span class="n">i</span><span class="p">]))</span>
+            <span class="n">mPlier</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">]))</span>
+            <span class="n">product</span> <span class="o">=</span> <span class="n">mCand</span> <span class="o">*</span> <span class="n">mPlier</span>
+            <span class="n">rhs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">perm</span><span class="p">[</span><span class="n">j</span><span class="p">:]))</span>
+            <span class="k">if</span> <span class="n">product</span> <span class="o">&gt;</span> <span class="n">rhs</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">product</span> <span class="o">==</span> <span class="n">rhs</span><span class="p">:</span>
+                <span class="n">products</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">product</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">products</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Notice we are adding the products to the set to avoid duplicates. Running the double for loop above results in an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>45228
+9.040594220951176 seconds.
+</code></pre></div></div>
+
+<p>Therefore, the sum of all products part of a pandigital product is <strong>45228</strong>. It might be possible to make the code a bit faster. We can note that it runs through each product twice, since multiplication is commutative. In that case, we may only need to run through a carefully calculated half of all the permutations.</p>
+:ET

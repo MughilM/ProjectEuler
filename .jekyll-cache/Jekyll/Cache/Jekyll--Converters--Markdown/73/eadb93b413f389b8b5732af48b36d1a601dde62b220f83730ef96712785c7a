@@ -1,0 +1,119 @@
+I"�5<h2 id="question">Question</h2>
+
+<p>In the 5 by 5 matrix below, the minimal path sum from the top left to the bottom right, by moving left, right, up, and down, is indicated in bold red and is equal to 2297.</p>
+
+<p>[\begin{pmatrix}
+	\color{red}{\mathbf{131}} &amp; 673 &amp; \color{red}{\mathbf{234}} &amp; \color{red}{\mathbf{103}} &amp; \color{red}{\mathbf{18}}
+	<br />
+	\color{red}{\mathbf{201}} &amp; \color{red}{\mathbf{96}} &amp; 
+		\color{red}{\mathbf{342}} &amp; 965 &amp; \color{red}{\mathbf{150}}
+	<br />
+	630 &amp; 803 &amp; 746 &amp; \color{red}{\mathbf{422}} &amp; \color{red}{\mathbf{111}}
+	<br />
+	537 &amp; 699 &amp; 497 &amp; \color{red}{\mathbf{121}} &amp; 956
+	<br />
+	805 &amp; 732 &amp; 524 &amp; \color{red}{\mathbf{37}} &amp; \color{red}{\mathbf{331}}
+\end{pmatrix}]</p>
+
+<p>Find the minimal path sum from the top left to the bottom right by moving left, right, up, and down in <a href="https://projecteuler.net/project/resources/p083_matrix.txt">matrix.txt</a> (right click and “Save Link/Target As…”), a 31K text file containing an 80 by 80 matrix.</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>Woah. So what do we do? Unlike the previous two path sum problems, any cell can have its path coming from <strong>any direction</strong>. This creates confusion in that we don’t know which path to calculate first.</p>
+
+<p>Instead, we can take a different approach. We can think of the matrix of numbers as a topological <strong>graph</strong>. Each vertex represent a matrix entry, and each <strong>incoming edge to that vertex</strong> represents how much you need to add to get there.</p>
+
+<p>To clarify, the vertices will not have numbers themselves, only the edges will. To designate, I’ll put subscript to signify the row and column, for example \(v_{22}\) is the vertex in the 2nd row and 2nd column. This vertex, will have incoming edges from \(v_{12}, v_{21}, v_{23}\) and \(v_{32}\) with edge weights, 673, 201, 342, and 803 respectively.</p>
+
+<p>Once we convert the problem representation, the question now turns into: “What is the path with the shortest weight from \(v_{11}\) to \(v_{nn}\). A shortest path problem! There has been a lot of research in shortest path problems, most famously by Edsger Dijkstra, who created <a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Dijkstra’s Algorithm</a>. If you haven’t heard of it, I strongly encourage you to visit the link and especially look at the animation, as it provides the best explanation. Below I simply perform the conversion I stated earlier, and implement Dijkstra’s Algorithm on the resulting graph.</p>
+
+<p>One small implementation detail, I leave out the top left corner value from the graph, because it is an initial value which is not originating from anywhere. Instead, I just add it at the very end.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Function to determine the row-column neighbors
+# of an index in the matrix
+</span><span class="k">def</span> <span class="nf">getNeighbors</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="c1"># Grab the row and column (0-indexed)
+</span>    <span class="n">row</span> <span class="o">=</span> <span class="n">index</span> <span class="o">//</span> <span class="n">height</span>
+    <span class="n">column</span> <span class="o">=</span> <span class="n">index</span> <span class="o">%</span> <span class="n">width</span>
+    <span class="c1"># Calculate the 4 neighbors in
+</span>    <span class="c1"># each direction
+</span>    <span class="n">RCNeighs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>  <span class="c1"># Left
+</span>        <span class="p">(</span><span class="n">row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="p">),</span>  <span class="c1"># Up
+</span>        <span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>  <span class="c1"># Right
+</span>        <span class="p">(</span><span class="n">row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>   <span class="c1"># Down
+</span>    <span class="p">]</span>
+    <span class="c1"># Filter out locations that are
+</span>    <span class="c1"># outside the range. These would be
+</span>    <span class="c1"># negatives or numbers bigger than width/height
+</span>    <span class="n">RCNeighs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">loc</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">),</span> <span class="n">RCNeighs</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">RCNeighs</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">'./p083_matrix.txt'</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">'int32'</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">','</span><span class="p">)</span>
+
+<span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">.</span><span class="n">shape</span>
+
+<span class="c1"># We are going to take Dijkstra's approach and treat
+# the digits as edge weights. The graph will be
+# directed because going from backwards adds a different number.
+# The nodes will numbered 0 to whatever number, across the columns
+# then down the rows. Due to this, when we find the minimum
+# distance, we must ADD THE TOP LEFT.
+</span><span class="n">edgeWeights</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">height</span><span class="p">):</span>
+    <span class="n">neighbors</span> <span class="o">=</span> <span class="n">getNeighbors</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># For each neighbor, calculate index value
+</span>    <span class="c1"># and grab the value...
+</span>    <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
+        <span class="n">indexVal</span> <span class="o">=</span> <span class="n">row</span> <span class="o">*</span> <span class="n">width</span> <span class="o">+</span> <span class="n">col</span>
+        <span class="n">weights</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="n">indexVal</span><span class="p">,</span> <span class="n">matrix</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]))</span>
+    <span class="c1"># Assign the weights for this index...
+</span>    <span class="n">edgeWeights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights</span>
+
+<span class="c1"># Now we can do Dijkstra's algorithm. The start index
+# is the node value 0 (top left).
+# We need a unvisited array and an array to hold the minimum
+# values.
+</span><span class="n">minValues</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">edgeWeights</span><span class="p">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="s">'inf'</span><span class="p">)</span>
+<span class="n">unvisited</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">edgeWeights</span><span class="p">.</span><span class="n">keys</span><span class="p">())</span>
+
+<span class="c1"># As a first step, the start node will have distance 0.
+</span><span class="n">minValues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># While we still have vertices to visit.
+</span><span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">unvisited</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="c1"># Choose the index with the lowest distance which
+</span>    <span class="c1"># hasn't been visited yet.
+</span>    <span class="n">nextIndex</span> <span class="o">=</span> <span class="n">unvisited</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">minValues</span><span class="p">[</span><span class="n">unvisited</span><span class="p">])]</span>
+    <span class="c1"># Grab the unvisited neighbors
+</span>    <span class="n">unvisitedNeighs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">unvisited</span><span class="p">,</span> <span class="n">edgeWeights</span><span class="p">[</span><span class="n">nextIndex</span><span class="p">]))</span>
+    <span class="c1"># For each unvisited neighbor, add the weight to
+</span>    <span class="c1"># the current min value of nextIndex and see if it should
+</span>    <span class="c1"># be updated
+</span>    <span class="k">for</span> <span class="n">neigh</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="n">unvisitedNeighs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">minValues</span><span class="p">[</span><span class="n">nextIndex</span><span class="p">]</span> <span class="o">+</span> <span class="n">weight</span> <span class="o">&lt;</span> <span class="n">minValues</span><span class="p">[</span><span class="n">neigh</span><span class="p">]:</span>
+            <span class="n">minValues</span><span class="p">[</span><span class="n">neigh</span><span class="p">]</span> <span class="o">=</span> <span class="n">minValues</span><span class="p">[</span><span class="n">nextIndex</span><span class="p">]</span> <span class="o">+</span> <span class="n">weight</span>
+    <span class="c1"># The index is now visited, so remove it...
+</span>    <span class="n">unvisited</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="n">nextIndex</span><span class="p">)</span>
+
+<span class="c1"># The value in the bottom right is the last value
+# in the minValues array. Add this to the value in
+# the top left to get our minimum sum.
+</span><span class="k">print</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">minValues</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">,</span> <span class="s">'seconds.'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Running the algorithm gets us an output of</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>425185
+4.2442820999999995 seconds.
+</code></pre></div></div>
+
+<p>Thus, the smallest corner to corner sum is <strong>425185</strong>.</p>
+:ET

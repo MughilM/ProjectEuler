@@ -1,0 +1,53 @@
+I"k<h2 id="question">Question</h2>
+
+<p>It was proposed by Christian Goldbach that every odd composite number that can be written as the sum of a prime and twice a square.</p>
+
+<p>[\begin{aligned}
+9 &amp;= 7 + 2\times 1^2
+<br />
+15 &amp;= 7 + 2\times 2^2
+<br />
+21 &amp;= 3 + 2\times 3^2
+<br />
+25 &amp;= 7 + 2\times 3^2
+<br />
+27 &amp;= 19 + 2\times 2^2
+<br />
+33 &amp;= 31 + 2\times 1^2
+\end{aligned}]</p>
+
+<p>It turns out that the conjecture was false.</p>
+
+<p>What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>We can do this problem with a double loop. First we keep looping through all odd composite numbers. Then, we keep subtracting twices of squares from it until the max we can subtract, and see if it ever results in a prime. For example, with \(21\), we start with \(21 - 2\times 1^2\). This is \(20\), which isn’t prime, so we move to the next. \(21-2\times2^2=13\), which is prime, so this odd number can be written this way. If we ever find a number which exhausted all twices of squares, then that is our solution.</p>
+
+<p>First, we go to each odd number \(x\) in general. We need a small check to see if it’s prime before we start checking sums. If it’s not prime, then we start from 1 and go to \(\sqrt{x/2}\) and check if doubling it and subtracting it from \(x\) gives us a prime.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">primes</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="c1"># Check if the number is prime
+</span>    <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">primes</span><span class="p">):</span>
+        <span class="n">primes</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="c1"># Check if twice a square being subtracted
+</span>    <span class="c1"># from this number results in a prime.
+</span>    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">((</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">k</span><span class="p">)</span> <span class="ow">in</span> <span class="n">primes</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">n</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="k">break</span>
+    <span class="n">n</span> <span class="o">+=</span> <span class="mi">2</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Notice the prime check is not something overly complicated. Running the program results in an output of,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>5777
+0.08932956603362126 seconds.
+</code></pre></div></div>
+
+<p>Therefore, <strong>5777</strong> is the first odd composite number that can’t be written as the sum of a prime and twice a square.</p>
+:ET

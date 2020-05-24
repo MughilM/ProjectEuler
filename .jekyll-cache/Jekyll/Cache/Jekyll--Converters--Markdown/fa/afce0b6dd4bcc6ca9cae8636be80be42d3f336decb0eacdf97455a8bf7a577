@@ -1,0 +1,161 @@
+I""8<h2 id="question">Question</h2>
+
+<p>Consider the following “magic” 3-gon ring, filled with numbers 1 to 6, and each line adding to nine.</p>
+
+<p><img src="http://localhost:4000/ProjectEuler\images\PE_Imgs\p068_1.png" alt="p068_1" /></p>
+
+<p>Working <strong>clockwise</strong>, and starting from the group of three with the numerically lowest external node (4,3,2 in this example), each solution can be described uniquely. For example, the above solution can be described by the set: 4,3,2; 6,2,1; 5,1,3.</p>
+
+<p>It is possible to complete the ring with four different totals: 9, 10, 11, and 12. There are eight solutions in total.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Total</th>
+      <th>Solution Set</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>9</td>
+      <td>4,2,3; 5,3,1; 6,1,2</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>4,3,2; 6,2,1; 5,1,3</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>2,3,5; 4,5,1; 6,1,3</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>2,5,3; 6,3,1; 4,1,5</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>1,4,6; 3,6,2; 5,2,4</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>1,6,4; 5,4,2; 3,2,6</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>1,5,6; 2,6,4; 3,4,5</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>1,6,5; 3,5,4; 2,4,6</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>By concatenating each group it is possible to form 9-digit strings; the maximum string for a 3-gon ring is 432621513.</p>
+
+<p>Using the numbers 1 to 10, and depending on arrangements, it is possible to form 16- and 17-digit strings. What is the maximum <strong>16-digit</strong> string for a “magic” 5-gon ring?</p>
+
+<p><img src="http://localhost:4000/ProjectEuler\images\PE_Imgs\p068_2.png" alt="p068_2" /></p>
+
+<h2 id="answer">Answer</h2>
+
+<p>From the way how the strings are formed, we can deduce that <strong>the number 10 has to be on the outer ring</strong>. Why? Well, the string is going to concatenate 15 numbers, 3 for each of the 5 arms. Numbers on the inner ring will be repeated twice, since they are part of two separate arms. Thus, if “10” is on the outer ring, then it will be present <em>once</em> in the string, which means the length of the string will 14 (one digit for 14 circles), plus 2 for the single “10”, for a grand total of 16 characters.</p>
+
+<p>So we know that “10” is on the outer ring. Now, we need a way to quickly go through all possible starting configurations of the ring, without falling to brute force. Note that we also shouldn’t take into account two rings that differ by a rotation, as these are the same ring.</p>
+
+<p>We can loop through all sets of 5 unique numbers, that contain “10”, to place in the outer ring. Remember that the ring strings are reported starting with the smallest number. We can then actually have this fact enforce our ordering of the number placements.</p>
+
+<p>Once we placed 5 numbers on the outer ring, we can fill in the first arm using 2 numbers. This sets in stone the sum that must be fulfilled with the other 4 arms. Thus, using the remaining available numbers, we can test numbers to see if a solution is possible.</p>
+
+<p>To recap, our methodology:</p>
+
+<ul>
+  <li>Generate all distinct sorted sets of 5 distinct numbers that contain the number 10. These are placed on the outer ring.</li>
+  <li>For each set, place 2 of the remaining 5 numbers onto the arm with the smallest number. This sets the required sum.</li>
+  <li>See if it’s possible to satisfy the sum on the other 4 arms with the 3 remaining numbers. If it is possible, output the configuration. Otherwise, move on to the next set of 5.</li>
+</ul>
+
+<p>For technalities, I put the numbers of each arm as a row in a table, so I can quickly calculate the sums. We use <code class="highlighter-rouge">itertools.permutations</code> to loop through the groups of 5 numbers.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">filterOut</span><span class="p">(</span><span class="n">toRemove</span><span class="p">,</span> <span class="n">origList</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">ele</span> <span class="k">for</span> <span class="n">ele</span> <span class="ow">in</span> <span class="n">origList</span> <span class="k">if</span> <span class="n">ele</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">toRemove</span><span class="p">]</span>
+
+<span class="c1"># Okay, so basically, we have to
+# loop through all possible locations
+# for numbers in the outer circle and
+# pair of numbers for the first petal.
+</span><span class="n">maxNum</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">numList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxNum</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">allPerms</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxNum</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">maxNum</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">maxNum</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="mi">10</span> <span class="ow">in</span> <span class="n">perm</span><span class="p">:</span>
+            <span class="n">allPerms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,)</span> <span class="o">+</span> <span class="n">perm</span><span class="p">)</span>
+            <span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">allPerms</span><span class="p">:</span>
+    <span class="c1"># Get numbers that are remaining
+</span>    <span class="n">copied</span> <span class="o">=</span> <span class="n">filterOut</span><span class="p">(</span><span class="n">perm</span><span class="p">,</span> <span class="n">numList</span><span class="p">)</span>
+    <span class="c1"># print(perm, '==&gt; ', end='')
+</span>    <span class="c1"># All possible pairs of numbers that can be placed
+</span>    <span class="c1"># into the 2 remaining circles.
+</span>    <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="n">copied</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="c1"># print(pair, ' ', end='')
+</span>        <span class="c1"># Make a small 2d array of the sums...
+</span>        <span class="n">ring</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">maxNum</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">ring</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">perm</span>
+        <span class="c1"># Assign the pair...
+</span>        <span class="n">ring</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">pair</span>
+        <span class="c1"># The second number in the pair is also the
+</span>        <span class="c1"># second number in the second leg...
+</span>        <span class="n">ring</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># The first number in the pair is also
+</span>        <span class="c1"># the third number in the last leg
+</span>        <span class="n">ring</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Calculate the required sum
+</span>        <span class="n">sumToMeet</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ring</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># Filter out the pair...
+</span>        <span class="n">innerNumsLeft</span> <span class="o">=</span> <span class="n">filterOut</span><span class="p">(</span><span class="n">pair</span><span class="p">,</span> <span class="n">copied</span><span class="p">)</span>
+        <span class="c1"># Okay, we have our sum and starting
+</span>        <span class="c1"># numbers. Now we can keep putting
+</span>        <span class="c1"># required numbers until it's impossible
+</span>        <span class="c1"># to put anymore. We keep removing from the list.
+</span>        <span class="c1"># If we finish the loop, and the list is empty,
+</span>        <span class="c1"># then we've placed everything..
+</span>        <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Current sum row.
+</span>        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">innerNumsLeft</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">maxNum</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Calculate number that should go here...
+</span>            <span class="n">requiredNum</span> <span class="o">=</span> <span class="n">sumToMeet</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ring</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="c1"># If the required number is not in the list,
+</span>            <span class="c1"># then it's impossible, and we break and go
+</span>            <span class="c1"># to the next setup.
+</span>            <span class="k">if</span> <span class="n">requiredNum</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">innerNumsLeft</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="c1"># If this is the last number
+</span>            <span class="c1"># placed, we also need to check
+</span>            <span class="c1"># the other leg that has been filled.
+</span>
+            <span class="c1"># Otherwise remove it, add it to
+</span>            <span class="c1"># the ring, and go to the next leg.
+</span>            <span class="n">ring</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">requiredNum</span>
+            <span class="n">ring</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">requiredNum</span>
+            <span class="n">innerNumsLeft</span><span class="p">.</span><span class="n">remove</span><span class="p">(</span><span class="n">requiredNum</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># Check to see if we placed all the
+</span>        <span class="c1"># numbers, and that the last leg is
+</span>        <span class="c1"># the correct sum
+</span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">innerNumsLeft</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ring</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="n">sumToMeet</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">ring</span><span class="p">))))</span>
+</code></pre></div></div>
+
+<p>Running this outputs all 16-digit configurations:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2594936378711015
+2951051817673439
+6357528249411013
+6531031914842725
+0.8801705000000002 seconds.
+</code></pre></div></div>
+
+<p>Therefore, we can see that the maximum 16-digit string is <strong>6531031914842725</strong>.</p>
+:ET

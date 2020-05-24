@@ -1,0 +1,24 @@
+I"Ó<h2 id="question">Question</h2>
+
+<p>\(2^{15} = 32768\) and the sum of its digits is \(3 + 2 + 7 + 6 + 8 = 26\).</p>
+
+<p>What is the sum of the digits of the number \(2^{1000}\)?</p>
+
+<h2 id="answer">Answer</h2>
+
+<p>As said in <a href="/ProjectEuler/ProjectEuler/Problem-13-Large-sum/">a previous problem</a>, Python is very good at computing and handling large numbers. As a result, this problem can be done in a paltry two lines, as shown below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create array of digits in 2 ^ 1000
+</span><span class="n">num</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="mi">1000</span><span class="p">)]</span>
+<span class="c1"># Add them up
+</span><span class="k">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>Running gives,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1366
+0.00012523456790123458 seconds.
+</code></pre></div></div>
+
+<p>Thus, our answer is <strong>1366</strong> and weâ€™re done in a jiff.</p>
+:ET
