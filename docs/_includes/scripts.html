@@ -60,3 +60,52 @@ MathJax = {
 {%- if page.layout == "search" -%}
   {% include lunr-search-scripts.html %}
 {%- endif -%}
+
+<!-- Collapsible entries... -->
+<script>
+  var entries = document.getElementsByClassName("entry h-entry");
+  var i;
+  
+  for (i = 0; i < entries.length; i++) {
+    entries[i].addEventListener("mouseover", function() {
+	  this.classList.toggle("active");
+	  var content = this.getElementsByClassName("entry-excerpt p-summary")[0];
+	  // content.classList.toggle("active");
+	  //content.style.visibility = "visible";
+	  //content.style.opacity = 1;
+	  content.style.display = "block";
+	  //content.style.maxHeight = content.scrollHeight + "px";
+	});
+	entries[i].addEventListener("mouseout", function() {
+	  this.classList.toggle("active");
+	  var content = this.getElementsByClassName("entry-excerpt p-summary")[0];
+	  // content.classList.toggle("active");
+	  //content.style.visibility = "hidden";
+	  //content.style.opacity = 0;
+	  content.style.display = "none";
+	  //content.style.maxHeight = null;
+	});
+  }
+  
+  var entrySummaries = document.getElementsByClassName("entry-excerpt p-summary");
+  var i;
+  
+  for (i = 0; i < entrySummaries.length; i++) {
+    entrySummaries[i].addEventListener("mouseover", function() {
+	  this.classList.toggle("active");
+	  //this.style.visibility = "visible";
+	  //this.style.opacity = 1;
+	  this.style.display = "block";
+	  //this.style.maxHeight = this.scrollHeight + "px";
+	});
+	entrySummaries[i].addEventListener("mouseout", function() {
+	  this.classList.toggle("active");
+	  //this.style.visibility = "hidden";
+	  //this.style.opacity = 0;
+	  this.style.display = "none";
+	  //this.style.maxHeight = null;
+	});
+  }
+	
+	
+</script>

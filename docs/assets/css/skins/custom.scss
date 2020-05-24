@@ -48,3 +48,10 @@ $base0f: #d33682 !default;
 blockquote {
   font-style: italic;
 }
+
+.entry-excerpt {
+  display: none;
+  /* max-height: 0; */
+  /* transition: max-height 0.6s ease-out; */
+  /* overflow: hidden; */
+}

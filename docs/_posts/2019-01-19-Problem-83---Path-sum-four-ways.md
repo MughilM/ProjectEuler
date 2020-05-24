@@ -6,30 +6,29 @@ number: 83
 mathjax: true
 ---
 
-## Question
+> In the 5 by 5 matrix below, the minimal path sum from the top left to the bottom right, by moving left, right, up, and down, is indicated in bold red and is equal to 2297.
+>
+>
+> $$
+> \begin{pmatrix}
+> 	\color{red}{\mathbf{131}} & 673 & \color{red}{\mathbf{234}} & \color{red}{\mathbf{103}} & \color{red}{\mathbf{18}}
+> 	\\
+> 	\color{red}{\mathbf{201}} & \color{red}{\mathbf{96}} & 
+> 		\color{red}{\mathbf{342}} & 965 & \color{red}{\mathbf{150}}
+> 	\\
+> 	630 & 803 & 746 & \color{red}{\mathbf{422}} & \color{red}{\mathbf{111}}
+> 	\\
+> 	537 & 699 & 497 & \color{red}{\mathbf{121}} & 956
+> 	\\
+> 	805 & 732 & 524 & \color{red}{\mathbf{37}} & \color{red}{\mathbf{331}}
+> \end{pmatrix}
+> $$
+>
+>
+> Find the minimal path sum from the top left to the bottom right by moving left, right, up, and down in [matrix.txt](https://projecteuler.net/project/resources/p083_matrix.txt) (right click and "Save Link/Target As..."), a 31K text file containing an 80 by 80 matrix.
+>
 
-In the 5 by 5 matrix below, the minimal path sum from the top left to the bottom right, by moving left, right, up, and down, is indicated in bold red and is equal to 2297.
-
-
-$$
-\begin{pmatrix}
-	\color{red}{\mathbf{131}} & 673 & \color{red}{\mathbf{234}} & \color{red}{\mathbf{103}} & \color{red}{\mathbf{18}}
-	\\
-	\color{red}{\mathbf{201}} & \color{red}{\mathbf{96}} & 
-		\color{red}{\mathbf{342}} & 965 & \color{red}{\mathbf{150}}
-	\\
-	630 & 803 & 746 & \color{red}{\mathbf{422}} & \color{red}{\mathbf{111}}
-	\\
-	537 & 699 & 497 & \color{red}{\mathbf{121}} & 956
-	\\
-	805 & 732 & 524 & \color{red}{\mathbf{37}} & \color{red}{\mathbf{331}}
-\end{pmatrix}
-$$
-
-
-Find the minimal path sum from the top left to the bottom right by moving left, right, up, and down in [matrix.txt](https://projecteuler.net/project/resources/p083_matrix.txt) (right click and "Save Link/Target As..."), a 31K text file containing an 80 by 80 matrix.
-
-## Answer
+<!--more-->
 
 Woah. So what do we do? Unlike the previous two path sum problems, any cell can have its path coming from **any direction**. This creates confusion in that we don't know which path to calculate first. 
 
