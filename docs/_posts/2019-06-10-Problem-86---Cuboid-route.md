@@ -129,7 +129,7 @@ $$
 $$
 
 
-Told you it would simplify nicely! Now, remember this is assuming that the spider would go over the $$a$$ edge en-route to $$F$$. Looking at the result, we see that the edge that gets passed over is squared on its own, and the other two sides are added together and the squared. **If we took $$\mathbf{b}$$ to be the passed over edge**, then $$a$$ and $$c$$ would be added together and then squared, which would result **in a larger distance**. Hopefully this convinces you that we need the spider to pass over the longest edge to have the shortest distance. If you're still not convinced, you could always go through the derivation assuming $$x$$ is on $$b$$ or $$c$$ :)
+Told you it would simplify nicely! Now, remember this is assuming that the spider would go over the $$a$$ edge en-route to $$F$$. Looking at the result, we see that the edge that gets passed over is squared on its own, and the other two sides are added together and then squared. **If we took $$\mathbf{b}$$ to be the passed over edge**, then $$a$$ and $$c$$ would be added together and then squared, which would result **in a larger distance**. Hopefully this convinces you that we need the spider to pass over the longest edge to have the shortest distance. If you're still not convinced, you could always go through the derivation assuming $$x$$ is on $$b$$ or $$c$$ :)
 
 ### Analyzing the Minimizing Distance
 
