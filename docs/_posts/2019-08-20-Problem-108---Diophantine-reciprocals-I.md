@@ -30,7 +30,7 @@ number: 108
 >
 > What is the least value of $$n$$ for which the number of distinct solutions exceeds one-thousand?
 >
-> NOTE: This problem is an easier version of Problem 110; it is strongly advised that you solve this one first.
+> NOTE: This problem is an easier version of [Problem 110]({{ site.url }}{{ site.baseurl }}{% post_url 2019-08-21-Problem-110---Diophantine-reciprocals-II %}); it is strongly advised that you solve this one first.
 >
 
 <!--more-->
