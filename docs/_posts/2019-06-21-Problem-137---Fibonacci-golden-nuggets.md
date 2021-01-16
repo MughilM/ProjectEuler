@@ -48,7 +48,7 @@ $$
 \begin{aligned}
 	A_F(x) &= \sum_{n=1}^\infty F_nx^n
 	\\ &=
-	F_1x + F_2x^2 + \sum_{n=1}^\infty F_nx^n
+	F_1x + F_2x^2 + \sum_{n=3}^\infty F_nx^n
 	\\ &=
 	x + x^2 + \sum_{n=3}^\infty(F_{n-1} + F_{n-2})x^n
 	\\ &=
@@ -124,7 +124,7 @@ $$
 
 An integer! With reference to our table above, $$A_F(x)=2$$ corresponds to $$n=2$$, and $$A_F(x)=15$$ corresponds to $$n=4$$. In fact, you'll notice that our golden nuggets occur when $$n$$ is even.
 
-Why? The reason is that when $$n$$ is odd, the $$(-1)^n$$ will result in $$A_F(x)$$ being negative. However, $$x$$is still positive. Going back to our infinite series, if $$x$$ is positive, then all of our terms are positive, and so our sum **must be positive** as well. Thus, having $$n$$ be odd is a mismatch to the infinite series definition.
+Why? The reason is that when $$n$$ is odd, the $$(-1)^n$$ will result in $$A_F(x)$$ being negative. However, $$x$$ is still positive. Going back to our infinite series, if $$x$$ is positive, then all of our terms are positive, and so our sum **must be positive** as well. Thus, having $$n$$ be odd is a mismatch to the infinite series definition.
 
 ## Evaluation
 
