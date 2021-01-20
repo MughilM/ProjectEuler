@@ -41,6 +41,8 @@ google_fonts:
     weights: "400,400i,700,700i"
   - name: "Exo 2"
     weights: "400,400i,700,700i"
+  - name: "Syne Mono"
+    weights: "400"
 google_analytics: # Google Analytics id, e.g. "UA-NNNNNNNN-N"
 disqus:
   shortname: mughilgithubsite # Disqus shortname, e.g. "my_disqus_shortname"
