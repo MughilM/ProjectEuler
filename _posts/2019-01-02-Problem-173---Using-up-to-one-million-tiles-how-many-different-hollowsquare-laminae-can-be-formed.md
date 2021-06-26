@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Problem 173 - Using up to one million tiles how many different \"hollow\" square laminae can be formed?"
+title: "Problem 173 - Using up to one million tiles how many different 'hollow' square laminae can be formed?"
 date: 2020-01-02 12:47
 number: 173
 mathjax: true
