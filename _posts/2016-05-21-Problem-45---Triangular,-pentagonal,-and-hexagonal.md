@@ -30,7 +30,7 @@ H_n=n(2n-1)=\frac{1}{2}(2n)(2n-1)=\frac{1}{2}(2n-1)((2n-1)+1)=T_{2n-1}
 $$
 
 
-So that means that all hexagonal numbers are triangle numbers! That reduces the problem a lot, as now we only need to check to see what is the next hexagonal number that is also a pentagonal number. Using the same function from the [previous problem]({{ site.baseurl }}{% post_url 2016-05-20-Problem-44---Pentagonal-numbers %}), we can set up a simple loop starting from $H_{144}$, and keep checking each hexagonal number until we reach a pentagonal number:
+So that means that all hexagonal numbers are triangle numbers! That reduces the problem a lot, as now we only need to check to see what is the next hexagonal number that is also a pentagonal number. Using the same function from the [previous problem]({{ site.url }}{% post_url 2016-05-20-Problem-44---Pentagonal-numbers %}), we can set up a simple loop starting from $H_{144}$, and keep checking each hexagonal number until we reach a pentagonal number:
 
 ```python
 n = 144 # H_143 is pentagonal

@@ -14,7 +14,7 @@ What is the sum of the digits of the number $$2^{1000}$$?
 
 ## Answer
 
-As said in [a previous problem]({{ site.baseurl }}{% post_url 2015-07-27-Problem-13---Large-sum %}), Python is very good at computing and handling large numbers. As a result, this problem can be done in a paltry two lines, as shown below.
+As said in [a previous problem]({{ site.url }}{% post_url 2015-07-27-Problem-13---Large-sum %}), Python is very good at computing and handling large numbers. As a result, this problem can be done in a paltry two lines, as shown below.
 
 ```python
 # Create array of digits in 2 ^ 1000

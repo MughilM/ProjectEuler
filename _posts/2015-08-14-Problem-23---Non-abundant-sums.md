@@ -18,7 +18,7 @@ Find the sum of all the positive integers which cannot be written as the sum of 
 
 ## Answer
 
-Would you look at that. Looks like we can use the $$d(n)$$ method we developed in [Problem 21]({{ site.baseurl }}{% post_url 2015-08-13-Problem-21---Amicable-numbers %}). Please refer to that problem listing to see how we found the sum of proper divisors. This time we have to go up to 28123. Afterwards, we must grab all numbers which turn out to be abundant. In this case, it is easier to see what numbers CAN be written as the sum of two abundant numbers. 
+Would you look at that. Looks like we can use the $$d(n)$$ method we developed in [Problem 21]({{ site.url }}{% post_url 2015-08-13-Problem-21---Amicable-numbers %}). Please refer to that problem listing to see how we found the sum of proper divisors. This time we have to go up to 28123. Afterwards, we must grab all numbers which turn out to be abundant. In this case, it is easier to see what numbers CAN be written as the sum of two abundant numbers. 
 
 Since the list is sorted, we can run a double for loop that goes through each pair of numbers. We can break out of the inner loop once we reach a sum bigger than 28123 to save some time. Once we have the numbers, we can sum these up, and subtract it from the sum of all numbers from 1 to 28123, which recall has a closed-from formula of $$\frac{n(n+1)}{2}$$.
 

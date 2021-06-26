@@ -24,7 +24,7 @@ How many elements would be contained in the set of reduced proper functions for 
 
 ## Answer
 
-This is the same setup as [Problem 71]({{ site.baseurl }}{% post_url 2017-06-21-Problem-71---Ordered-fractions %}), but now we have to count the fractions. When is a fraction in the set? It's when the fraction is reduced, and that is when the numerator and denominator **do not share any common factors**. Another word for this is that $$n$$ and $$d$$ are **coprime**. So now we need to count how many numbers are coprime to a given denominator $$d$$. But wait a moment, this is just $$\phi(d)$$, introduced in [Problem 69]({{ site.baseurl }}{% post_url 2017-06-21-Problem-69---Totient-maximum %})! So we can use the same exact moment of calculating the totients, and finally simply sum them all. 
+This is the same setup as [Problem 71]({{ site.url }}{% post_url 2017-06-21-Problem-71---Ordered-fractions %}), but now we have to count the fractions. When is a fraction in the set? It's when the fraction is reduced, and that is when the numerator and denominator **do not share any common factors**. Another word for this is that $$n$$ and $$d$$ are **coprime**. So now we need to count how many numbers are coprime to a given denominator $$d$$. But wait a moment, this is just $$\phi(d)$$, introduced in [Problem 69]({{ site.url }}{% post_url 2017-06-21-Problem-69---Totient-maximum %})! So we can use the same exact moment of calculating the totients, and finally simply sum them all. 
 
 ```python
 limit = 10 ** 6

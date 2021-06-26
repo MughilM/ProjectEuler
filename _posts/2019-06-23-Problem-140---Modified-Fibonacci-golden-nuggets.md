@@ -26,7 +26,7 @@ mathjax: true
 
 ## Answer
 
-This problem is very similar to [Problem 137]({{ site.baseurl }}{% post_url 2019-06-21-Problem-137---Fibonacci-golden-nuggets %}) where we dealt with purely Fibonacci numbers. Here, the sequence is slightly different, but hopefully the same pattern (if not a variation) should stand. We will follow the same steps. First, using the sequence definition we need to come up with a closed form formula for $$A_G(x)$$:
+This problem is very similar to [Problem 137]({{ site.url }}{% post_url 2019-06-21-Problem-137---Fibonacci-golden-nuggets %}) where we dealt with purely Fibonacci numbers. Here, the sequence is slightly different, but hopefully the same pattern (if not a variation) should stand. We will follow the same steps. First, using the sequence definition we need to come up with a closed form formula for $$A_G(x)$$:
 
 
 $$
@@ -70,7 +70,7 @@ $$
 
 ## Finding when the discriminant is a perfect square
 
-The discriminant is different than in [Problem 137]({{ site.baseurl }}{% post_url 2019-06-21-Problem-137---Fibonacci-golden-nuggets %}), but the same steps hold. We found the first few values of $$C$$ that results in a perfect square under the square root, devised a rule, and proved it works.
+The discriminant is different than in [Problem 137]({{ site.url }}{% post_url 2019-06-21-Problem-137---Fibonacci-golden-nuggets %}), but the same steps hold. We found the first few values of $$C$$ that results in a perfect square under the square root, devised a rule, and proved it works.
 
 First we find a few values where we get a perfect square discriminant. Below are the values of $$C$$ which result in a rational $$x$$. 
 
@@ -85,7 +85,7 @@ First we find a few values where we get a perfect square discriminant. Below are
 | 1050  | 2351                 | $$\frac{50}{81}$$ |
 | 2037  | 4558                 | $$\frac{21}{34}$$ |
 
-Like [Problem 137]({{ site.baseurl }}{% post_url 2019-06-21-Problem-137---Fibonacci-golden-nuggets %}), we see the Fibonacci fractions, but then also see other fractions with seemingly random numbers. Taking just these non-Fibonacci fractions, they do seem to satisfy the addition property (2, 5, 7, 12, ...). Where did these numbers come from? Well, watch what happens when we add the Fibonacci numbers to the $$G$$ sequence:
+Like [Problem 137]({{ site.url }}{% post_url 2019-06-21-Problem-137---Fibonacci-golden-nuggets %}), we see the Fibonacci fractions, but then also see other fractions with seemingly random numbers. Taking just these non-Fibonacci fractions, they do seem to satisfy the addition property (2, 5, 7, 12, ...). Where did these numbers come from? Well, watch what happens when we add the Fibonacci numbers to the $$G$$ sequence:
 
 
 $$

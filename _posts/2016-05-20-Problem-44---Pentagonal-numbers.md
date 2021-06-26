@@ -22,7 +22,7 @@ Find the pair of pentagonal numbers, $$P_j$$ and $$P_k$$, for which their sum an
 
 ## Answer
 
-Just like [Problem 42]({{ site.baseurl }}{% post_url 2016-05-18-Problem-42---Coded-triangle-numbers %}), we need to test if a given number is a pentagonal number. Solving the equation by using the quadratic formula, and throwing out the negative answer, we get,
+Just like [Problem 42]({{ site.url }}{% post_url 2016-05-18-Problem-42---Coded-triangle-numbers %}), we need to test if a given number is a pentagonal number. Solving the equation by using the quadratic formula, and throwing out the negative answer, we get,
 
 
 $$

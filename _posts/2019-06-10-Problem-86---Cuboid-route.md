@@ -15,7 +15,6 @@ number: 86
 > It can be shown that there are exactly 2060 distinct cuboids, ignoring rotations, with integer dimensions, up to a maximum size of $$M$$ by $$M$$ by $$M$$, for which the shortest route has integer length when $$M=100$$. This is the least value of $$M$$ for which the number of solutions first exceeds two thousand; the number of solutions when $$M=99$$ is 1975.
 >
 > Find the least value of $$M$$ such that the number of solutions first exceeds one million.
->
 
 <!--more-->
 
@@ -147,7 +146,7 @@ That looks eerily like the Pythagorean formula. The only difference is that we'r
 
 To verify, we can use the example. We have $$a=6$$, $$b=5$$, and $$c=3$$. This corresponds to the triple $$\{6,8,10\}$$, and indeed $$10$$ is the shortest path.
 
-But wait, we've dealt with looping through triples before. We use those matrices from [Problem 39]({{ site.baseurl }}{% post_url 2016-05-17-Problem-39---Integer-right-triangles %})! But we have to deal with a little something....
+But wait, we've dealt with looping through triples before. We use those matrices from [Problem 39]({{ site.url }}{% post_url 2016-05-17-Problem-39---Integer-right-triangles %})! But we have to deal with a little something....
 
 ### Looping through all possible triplets
 

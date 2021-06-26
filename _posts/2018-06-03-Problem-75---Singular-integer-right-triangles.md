@@ -38,7 +38,7 @@ Given that $$L$$ is the length of the wire, for how many values of $$L\leq 1\,50
 
 ## Answer
 
-There is a problem, namely [Problem 39]({{ site.baseurl }}{% post_url 2016-05-17-Problem-39---Integer-right-triangles %}), that is extremely similar to this, in that we essentially have a bound on the perimeter of the triangle. Like that problem, it's easier to generate the triangles instead of checking each possible perimeter and see if a triangle exists. The method of generating the triples is the same; please consult the write-up of that problem for the details on we generate them. Here, I've modified it slightly to include the matrices in the method itself.
+There is a problem, namely [Problem 39]({{ site.url }}{% post_url 2016-05-17-Problem-39---Integer-right-triangles %}), that is extremely similar to this, in that we essentially have a bound on the perimeter of the triangle. Like that problem, it's easier to generate the triangles instead of checking each possible perimeter and see if a triangle exists. The method of generating the triples is the same; please consult the write-up of that problem for the details on we generate them. Here, I've modified it slightly to include the matrices in the method itself.
 
 The method only generates primitive triples, however, so we have to take into multiples of it i.e. the (30,40,50) is a multiple of the (3,4,5) triangle. Once the perimeter of the primitive triangle has been computed, we just add all multiples of it until the limit. As we go along, we place on regard on duplicates yet.
 

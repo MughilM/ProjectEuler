@@ -38,12 +38,11 @@ Find the maximum total from top to bottom of the triangle below:
 63 66 04 68 89 53 67 30 73 16 69 87 40 31
 04 62 98 27 23 09 70 98 73 93 38 53 60 04 23
 </pre>
-
-**NOTE**: As there are only 16384 routes, it is possible to solve this problem by trying every route. However, [Problem 67]({{ site.baseurl }}{% post_url 2017-06-21-Problem-67---Maximum-path-sum-II %}), is the same challenge with a triangle containing one-hundred rows; it cannot be solved by brute force, and requires a clever method! ;o)
+**NOTE**: As there are only 16384 routes, it is possible to solve this problem by trying every route. However, [Problem 67]({{ site.url }}{% post_url 2017-06-21-Problem-67---Maximum-path-sum-II %}), is the same challenge with a triangle containing one-hundred rows; it cannot be solved by brute force, and requires a clever method! ;o)
 
 ## Answer
 
-Taking the note on the bottom into account, it is probably smarter to find an algorithm that will let us quickly find the maximum sum, so we can simply re-use the code for the future problem. How do we start? Well, even though the example in the problem lists out the numbers in the sum, the problem itself asks "Find the maximum total" - and that is all. That's key. This means we don't need to find the numbers which make the sum. Similar to the [lattice-paths problem]({{ site.baseurl }}{% post_url 2015-08-07-Problem-15---Lattice-paths %}), we can keep track of the maximum sum.
+Taking the note on the bottom into account, it is probably smarter to find an algorithm that will let us quickly find the maximum sum, so we can simply re-use the code for the future problem. How do we start? Well, even though the example in the problem lists out the numbers in the sum, the problem itself asks "Find the maximum total" - and that is all. That's key. This means we don't need to find the numbers which make the sum. Similar to the [lattice-paths problem]({{ site.url }}{% post_url 2015-08-07-Problem-15---Lattice-paths %}), we can keep track of the maximum sum.
 
 However, we have to make sure we save the sum for each spot in the row and not simply take the maximum number below us. Why? Imagine the "6" in the example given in the problem was instead "200":
 
@@ -130,4 +129,4 @@ Running the code above gives an output of,
 0.0003338271604938272 seconds.
 ```
 
-Thus, **1074** is our answer. As an extra note, this method of programming where we keep track of intermediate values on the fly is known as *dynamic programming*. It is extremely useful if we only need the result and not the steps we took to get there, like with this problem, and the [lattice-path problem]({{ site.baseurl }}{% post_url 2015-08-07-Problem-15---Lattice-paths %}).
+Thus, **1074** is our answer. As an extra note, this method of programming where we keep track of intermediate values on the fly is known as *dynamic programming*. It is extremely useful if we only need the result and not the steps we took to get there, like with this problem, and the [lattice-path problem]({{ site.url }}{% post_url 2015-08-07-Problem-15---Lattice-paths %}).

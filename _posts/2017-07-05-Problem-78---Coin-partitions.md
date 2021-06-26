@@ -32,7 +32,7 @@ Find the least value of $$n$$ for which $$p(n)$$ is divisible by one million.
 
 ## Answer
 
-This is exactly the same problem as [Problem 76]({{ site.baseurl }}{%  post_url 2017-06-21-Problem-76---Counting-summations %}), just worded differently. Notice that since we are counting all the coins as "one pile", there is no more subtracting one from the answer. Regardless, we can use the same method for generating $$p(n)$$. Only difference now is that we append to our partition list as we go along, and our stopping condition is different. Additionally, I have done minor optimizations, such as reducing the number of computations we need to do per loop to try and make it as fast as possible.
+This is exactly the same problem as [Problem 76]({{ site.url }}{%  post_url 2017-06-21-Problem-76---Counting-summations %}), just worded differently. Notice that since we are counting all the coins as "one pile", there is no more subtracting one from the answer. Regardless, we can use the same method for generating $$p(n)$$. Only difference now is that we append to our partition list as we go along, and our stopping condition is different. Additionally, I have done minor optimizations, such as reducing the number of computations we need to do per loop to try and make it as fast as possible.
 
 One key optimization is that since $$p(n)$$ is calculated though a summation, we are checking to see if $$p(n)\mod 1000000 \equiv 0$$, and modulus distributes through sums, we don't have to store massive values of $$p(n)$$ and instead can store $$p(n)\mod 1000000$$. This will reduce the size of the numbers we add.
 

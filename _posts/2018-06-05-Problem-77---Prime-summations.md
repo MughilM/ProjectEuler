@@ -27,13 +27,12 @@ number: 77
 >
 >
 > What is the first value which can be written as the sum of primes in over five thousand different ways?
->
 
 <!--more-->
 
 ## Answer
 
-Like with [previous problem]({{ site.baseurl }}{% post_url 2017-06-21-Problem-76---Counting-summations %}), I researched for a possible recursive definition when using only prime numbers. Thankfully, [this Math StackExchange post](https://math.stackexchange.com/a/89661) shows a way to do it. The reason why it works is based on Euler transformations, which are an advanced math topic that is too out of scope to cover here. Please read the post if you are interested!
+Like with [previous problem]({{ site.url }}{% post_url 2017-06-21-Problem-76---Counting-summations %}), I researched for a possible recursive definition when using only prime numbers. Thankfully, [this Math StackExchange post](https://math.stackexchange.com/a/89661) shows a way to do it. The reason why it works is based on Euler transformations, which are an advanced math topic that is too out of scope to cover here. Please read the post if you are interested!
 
 Essentially, the number of partitions $$\kappa(n)$$ for a number $$n$$ where each partition consists of only prime numbers is given by
 

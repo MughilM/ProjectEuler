@@ -11,11 +11,10 @@ mathjax: true
 > Interestingly, $$\phi(87109)=79180$$, and it can be seen that $$87109$$ is a permutation of $$79180$$.
 >
 > Find the value of $$n, 1<n<10^7$$, for which $$\phi(n)$$ is a permutation of $$n$$ and the ratio $$n/\phi(n)$$ produces a minimum.
->
 
 <!--more-->
 
-There are a couple of changes from [Problem 69]({{ site.baseurl }}{% post_url 2017-06-21-Problem-69---Totient-maximum %}). First, we are looking for the **minimum** ratio as opposed to the maximum ratio. Secondly, our upper bound has increased from 1 million to 10 million. That means, if we were to try to run the same program to calculate $$\phi(n)$$ from the problem 69, it would increase by a good amount. Thus, we'll have to be smarter about this search.
+There are a couple of changes from [Problem 69]({{ site.url }}{% post_url 2017-06-21-Problem-69---Totient-maximum %}). First, we are looking for the **minimum** ratio as opposed to the maximum ratio. Secondly, our upper bound has increased from 1 million to 10 million. That means, if we were to try to run the same program to calculate $$\phi(n)$$ from the problem 69, it would increase by a good amount. Thus, we'll have to be smarter about this search.
 
 First, if $$n/\phi(n)$$ needs to be minimized, then $$\phi(n)$$ needs to be maximized. The totient function is directly related by the distinct prime factors of $$n$$ through
 

@@ -24,7 +24,7 @@ How many fractions lie between $$1/3$$ and $$1/2$$ in the sorted set of reduced 
 
 ## Answer
 
-Seeing as it's the third question in a row after Problems [71]({{ site.baseurl}}{% post_url 2017-06-21-Problem-71---Ordered-fractions %}) and [72]({{ site.baseurl }}{% post_url 2017-08-04-Problem-72---Counting-fractions %}), I decided to research to see if this "set of reduced proper fractions" had a name. To my delight, this set is actually called a **Farey sequence**, and of course, there is a Wikipedia article on it. More importantly, the article also shows how to generate the fractions **in order** given two consecutive fractions in the sequence. 
+Seeing as it's the third question in a row after Problems [71]({{ site.url}}{% post_url 2017-06-21-Problem-71---Ordered-fractions %}) and [72]({{ site.url }}{% post_url 2017-08-04-Problem-72---Counting-fractions %}), I decided to research to see if this "set of reduced proper fractions" had a name. To my delight, this set is actually called a **Farey sequence**, and of course, there is a Wikipedia article on it. More importantly, the article also shows how to generate the fractions **in order** given two consecutive fractions in the sequence. 
 
 Paraphrasing from the article, if we have two consecutive fractions $$a/b$$ and $$c/d$$, then the next fraction in the sequence is  $$p/q$$ where
 
@@ -38,7 +38,7 @@ $$
 $$
 
 
-Now, we have one of the fractions we start from, namely $$1/3$$, but we need the fraction immediately to its left in order to start the sequence. But we've done that before in [Problem 71]({{ site.baseurl }}{% post_url 2017-06-21-Problem-71---Ordered-fractions %})! So, all we need to do slightly adapt it, and then continue generating the next fraction until we hit $$1/2$$.
+Now, we have one of the fractions we start from, namely $$1/3$$, but we need the fraction immediately to its left in order to start the sequence. But we've done that before in [Problem 71]({{ site.url }}{% post_url 2017-06-21-Problem-71---Ordered-fractions %})! So, all we need to do slightly adapt it, and then continue generating the next fraction until we hit $$1/2$$.
 
 I've created a general function following #71's logic to find the fraction immediately to the left of $$a/b$$, given the maximum denominator.
 

@@ -21,11 +21,11 @@ That is, 3 + 7 + 4 + 9 = 23.
 
 Find the maximum total from top to bottom in [triangle.txt](https://projecteuler.net/project/resources/p067_triangle.txt) (right click and 'Save Link/Target As...') a 15K text file containing a triangle with one-hundred rows.
 
-**NOTE**: This is a much more difficult version of [Problem 18]({{ site.baseurl }}{% post_url 2015-08-07-Problem-18---Maximum-path-sum-I %}). It is not possible to try every route to solve this problem, as there are $$2^{99}$$ altogether! If you could check one trillion $$\left(10^{12}\right)$$ routes every second it would take over twenty billion years to check them all. There is an efficient algorithm to solve it ;o)
+**NOTE**: This is a much more difficult version of [Problem 18]({{ site.url }}{% post_url 2015-08-07-Problem-18---Maximum-path-sum-I %}). It is not possible to try every route to solve this problem, as there are $$2^{99}$$ altogether! If you could check one trillion $$\left(10^{12}\right)$$ routes every second it would take over twenty billion years to check them all. There is an efficient algorithm to solve it ;o)
 
 ## Answer
 
-My answer to [Problem 18]({{ site.baseurl }}{% post_url 2015-08-07-Problem-18---Maximum-path-sum-I %}) has the efficient algorithm in question, as there was a warning for this problem. Please see the answer to that problem for the algorithm. After replacing the file in the code and running it again, we get an output of,
+My answer to [Problem 18]({{ site.url }}{% post_url 2015-08-07-Problem-18---Maximum-path-sum-I %}) has the efficient algorithm in question, as there was a warning for this problem. Please see the answer to that problem for the algorithm. After replacing the file in the code and running it again, we get an output of,
 
 ```
 7273
