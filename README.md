@@ -1,5 +1,7 @@
 # Chirpy Starter
 
+## NOTE: This repository/branch site is not being maintained anymore and is now read-only. The docs have been absorbed by the main site repository (mughilm.github.io).
+
 [![Gem Version](https://img.shields.io/gem/v/jekyll-theme-chirpy)](https://rubygems.org/gems/jekyll-theme-chirpy)
 [![GitHub license](https://img.shields.io/github/license/cotes2020/chirpy-starter.svg?color=blue)][mit]
 
